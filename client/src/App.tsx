@@ -1,7 +1,6 @@
 import React from 'react';
 import {ThemeProvider} from "@mui/material";
 import {theme} from "./Theme/theme";
-import Bar from "./Components/UI/AppBars/Bar";
 import {BrowserRouter} from "react-router-dom";
 import AppRouter from "./Components/AppRouter";
 

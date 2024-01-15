@@ -2,7 +2,6 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -11,18 +10,16 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 interface Props {
+    navItems: string[];
     window?: () => Window;
 }
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
 
-export default function Bar(props: Props) {
-    const {window} = props;
+export default function MyAppBar({window, navItems}: Props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
@@ -48,7 +45,7 @@ export default function Bar(props: Props) {
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
-            <AppBar component="nav">
+            <AppBar position="static" component="nav">
                 <Toolbar>
                     <IconButton
                         color="inherit"

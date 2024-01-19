@@ -9,3 +9,9 @@
     flex-direction: column;
     min-height: 100vh;
 }
+
+.controlPanel{
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+}

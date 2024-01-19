@@ -2,13 +2,17 @@ import * as sql from 'mssql';
 import * as WebSocket from 'ws';
 
 const config: sql.config = {
-    user: 'username',
-    password: 'password',
+    user: 'questionnaires',
+    password: 'pass123',
     server: 'localhost',
-    database: 'questionnaires',
+    database: 'Questionnaires',
+    options: {
+        encrypt: true,
+        trustServerCertificate: true
+    }
 };
 
-const server = new WebSocket.Server({ port: 8080 });
+const server = new WebSocket.Server({port: 8080});
 
 server.on('connection', async (ws: WebSocket) => {
     console.log('connection')
@@ -25,8 +29,8 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result1 = await pool1.request()
                     .query(`
-                        SELECT QuestionnairesName, Groups
-                        FROM questionnairesdata
+                        SELECT QuestionnaireName, Groups
+                        FROM Questionnaires
                     `);
 
                 pool1.close();
@@ -36,11 +40,11 @@ server.on('connection', async (ws: WebSocket) => {
 
                 for (let i = 0; i < result1.recordset.length; i++) {
                     if (result1.recordset[i].Groups === 'Все') {
-                        questionnaires1.push(result1.recordset[i].QuestionnairesName);
+                        questionnaires1.push(result1.recordset[i].QuestionnaireName);
                     } else {
                         groupsArray = JSON.parse(result1.recordset[i].Groups);
                         if (groupsArray.includes(msg[1])) {
-                            questionnaires1.push(result1.recordset[i].QuestionnairesName);
+                            questionnaires1.push(result1.recordset[i].QuestionnaireName);
                         }
                     }
                 }
@@ -55,8 +59,8 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result2 = await pool2.request()
                     .query(`
-                        SELECT QuestionnairesName
-                        FROM questionnairesdata
+                        SELECT QuestionnaireName
+                        FROM Questionnaires
                         WHERE ProfessorName = '${msg[1]}'
                     `);
 
@@ -65,7 +69,7 @@ server.on('connection', async (ws: WebSocket) => {
                 const questionnaires2: string[] = [];
 
                 for (let i = 0; i < result2.recordset.length; i++) {
-                    questionnaires2.push(result2.recordset[i].QuestionnairesName);
+                    questionnaires2.push(result2.recordset[i].QuestionnaireName);
                 }
 
                 ws.send(JSON.stringify(['AvailableQuestionnaires', questionnaires2]));
@@ -79,8 +83,8 @@ server.on('connection', async (ws: WebSocket) => {
                 const result3 = await pool3.request()
                     .query(`
                         SELECT Questions, Answers
-                        FROM Questionnairesdata
-                        WHERE QuestionnairesName = '${msg[1]}'
+                        FROM Questionnaires
+                        WHERE QuestionnaireName = '${msg[1]}'
                     `);
 
                 pool3.close();
@@ -105,16 +109,16 @@ server.on('connection', async (ws: WebSocket) => {
                 const pool4 = await sql.connect(config);
 
                 const data4 = {
-                    QuestionnairesName: msg[3],
+                    QuestionnaireName: msg[3],
                     GroupNumber: msg[2],
                     Answers: JSON.stringify(msg[1]),
                 };
 
                 const result4 = await pool4.request()
                     .query`
-                    INSERT INTO studentanswers
-                        (QuestionnairesName, GroupNumber, Answers)
-                    VALUES (@QuestionnairesName, @GroupNumber, @Answers)
+                    INSERT INTO Answers
+                        (QuestionnaireName, GroupNumber, Answers)
+                    VALUES (@QuestionnaireName, @GroupNumber, @Answers)
                 `;
 
                 pool4.close();
@@ -132,18 +136,17 @@ server.on('connection', async (ws: WebSocket) => {
                 const pool5 = await sql.connect(config);
 
                 const data5 = {
-                    QuestionnairesName: msg[1],
+                    QuestionnaireName: msg[1],
                     Questions: msg[2],
                     Answers: msg[3],
                     Groups: msg[4],
                     ProfessorName: msg[5],
                 };
-
                 const result5 = await pool5.request()
                     .query`
                     INSERT INTO Questionnairesdata
-                        (QuestionnairesName, Questions, Answers, Groups, ProfessorName)
-                    VALUES (@QuestionnairesName, @Questions, @Answers, @Groups, @ProfessorName)
+                        (QuestionnaireName, Questions, Answers, Groups, ProfessorName)
+                    VALUES (@QuestionnaireName, @Questions, @Answers, @Groups, @ProfessorName)
                 `;
 
                 pool5.close();
@@ -161,9 +164,9 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result6 = await pool6.request()
                     .query`
-                    SELECT login
-                    FROM accounts
-                    WHERE login = ${msg[1]}
+                    SELECT Login
+                    FROM Accounts
+                    WHERE Login = ${msg[1]}
                 `;
 
                 if (result6.recordset.length > 0) {
@@ -171,15 +174,15 @@ server.on('connection', async (ws: WebSocket) => {
                 } else {
 
                     const data6 = {
-                        login: msg[1],
-                        password: msg[2],
+                        Login: msg[1],
+                        Password: msg[2],
                     };
 
                     const result7 = await pool6.request()
                         .query`
                         INSERT INTO Accounts
-                            (login, password)
-                        VALUES (@login, @password)
+                            (Login, Password)
+                        VALUES (@Login, @Password)
                     `;
 
                     if (result7.rowsAffected[0] === 1) {
@@ -199,9 +202,9 @@ server.on('connection', async (ws: WebSocket) => {
                 const result8 = await pool8.request()
                     .query`
                     SELECT *
-                    FROM accounts
-                    WHERE login = ${msg[1]}
-                      AND password = ${msg[2]}
+                    FROM Accounts
+                    WHERE Login = ${msg[1]}
+                      AND Password = ${msg[2]}
                 `;
 
                 if (result8.recordset.length > 0) {
@@ -214,7 +217,5 @@ server.on('connection', async (ws: WebSocket) => {
 
                 break;
         }
-
     });
-
 });

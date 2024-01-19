@@ -16563,7 +16563,6 @@
       <Description>Polish-100, case-insensitive, accent-sensitive, kanatype-sensitive, width-sensitive, supplementary characters</Description>
     </collation>
     <database id="5510" parent="1" name="Shop">
-      <Current>1</Current>
       <Fingerprint>5.45243/333DDAA0-E86D-46DC-8E0D-325B48CAB6A8@monax</Fingerprint>
       <Grants>5|database||1|connect|G
 5|database||0|view any column encryption key definition|G
@@ -16592,962 +16591,430 @@
       <ObjectId>6</ObjectId>
       <CollationName>Cyrillic_General_CI_AS</CollationName>
     </database>
-    <linked-server id="5516" parent="1" name="monax">
+    <database id="5516" parent="1" name="Questionnaires">
+      <Current>1</Current>
+      <Fingerprint>7.45305/505A4937-1673-4783-A257-88BC09A4A271@monax</Fingerprint>
+      <Grants>7|database||1|connect|G
+7|database||0|view any column encryption key definition|G
+7|database||0|view any column master key definition|G</Grants>
+      <ObjectId>7</ObjectId>
+      <PermissionsCheckSum>3196235284</PermissionsCheckSum>
+      <CollationName>Cyrillic_General_CI_AS</CollationName>
+    </database>
+    <linked-server id="5517" parent="1" name="monax">
       <DataSource>monax</DataSource>
       <Product>SQL Server</Product>
       <ProviderName>SQLNCLI</ProviderName>
     </linked-server>
-    <login id="5517" parent="1" name="sa">
+    <login id="5518" parent="1" name="sa">
       <DefaultDatabase>master</DefaultDatabase>
       <ObjectId>1</ObjectId>
     </login>
-    <login id="5518" parent="1" name="public">
+    <login id="5519" parent="1" name="public">
       <Enabled>1</Enabled>
       <ObjectId>2</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5519" parent="1" name="sysadmin">
+    <login id="5520" parent="1" name="sysadmin">
       <Enabled>1</Enabled>
       <ObjectId>3</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5520" parent="1" name="securityadmin">
+    <login id="5521" parent="1" name="securityadmin">
       <Enabled>1</Enabled>
       <ObjectId>4</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5521" parent="1" name="serveradmin">
+    <login id="5522" parent="1" name="serveradmin">
       <Enabled>1</Enabled>
       <ObjectId>5</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5522" parent="1" name="setupadmin">
+    <login id="5523" parent="1" name="setupadmin">
       <Enabled>1</Enabled>
       <ObjectId>6</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5523" parent="1" name="processadmin">
+    <login id="5524" parent="1" name="processadmin">
       <Enabled>1</Enabled>
       <ObjectId>7</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5524" parent="1" name="diskadmin">
+    <login id="5525" parent="1" name="diskadmin">
       <Enabled>1</Enabled>
       <ObjectId>8</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5525" parent="1" name="dbcreator">
+    <login id="5526" parent="1" name="dbcreator">
       <Enabled>1</Enabled>
       <ObjectId>9</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5526" parent="1" name="bulkadmin">
+    <login id="5527" parent="1" name="bulkadmin">
       <Enabled>1</Enabled>
       <ObjectId>10</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5527" parent="1" name="##MS_ServerStateReader##">
+    <login id="5528" parent="1" name="##MS_ServerStateReader##">
       <Enabled>1</Enabled>
       <ObjectId>11</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5528" parent="1" name="##MS_ServerStateManager##">
+    <login id="5529" parent="1" name="##MS_ServerStateManager##">
       <Enabled>1</Enabled>
       <ObjectId>12</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5529" parent="1" name="##MS_DefinitionReader##">
+    <login id="5530" parent="1" name="##MS_DefinitionReader##">
       <Enabled>1</Enabled>
       <ObjectId>13</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5530" parent="1" name="##MS_DatabaseConnector##">
+    <login id="5531" parent="1" name="##MS_DatabaseConnector##">
       <Enabled>1</Enabled>
       <ObjectId>14</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5531" parent="1" name="##MS_DatabaseManager##">
+    <login id="5532" parent="1" name="##MS_DatabaseManager##">
       <Enabled>1</Enabled>
       <ObjectId>15</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5532" parent="1" name="##MS_LoginManager##">
+    <login id="5533" parent="1" name="##MS_LoginManager##">
       <Enabled>1</Enabled>
       <ObjectId>16</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5533" parent="1" name="##MS_SecurityDefinitionReader##">
+    <login id="5534" parent="1" name="##MS_SecurityDefinitionReader##">
       <Enabled>1</Enabled>
       <ObjectId>17</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5534" parent="1" name="##MS_PerformanceDefinitionReader##">
+    <login id="5535" parent="1" name="##MS_PerformanceDefinitionReader##">
       <Enabled>1</Enabled>
       <ObjectId>18</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5535" parent="1" name="##MS_ServerSecurityStateReader##">
+    <login id="5536" parent="1" name="##MS_ServerSecurityStateReader##">
       <Enabled>1</Enabled>
       <ObjectId>19</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5536" parent="1" name="##MS_ServerPerformanceStateReader##">
+    <login id="5537" parent="1" name="##MS_ServerPerformanceStateReader##">
       <Enabled>1</Enabled>
       <ObjectId>20</ObjectId>
       <Type>server-role</Type>
     </login>
-    <login id="5537" parent="1" name="##MS_SQLResourceSigningCertificate##">
+    <login id="5538" parent="1" name="##MS_SQLResourceSigningCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>101</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5538" parent="1" name="##MS_SQLReplicationSigningCertificate##">
+    <login id="5539" parent="1" name="##MS_SQLReplicationSigningCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>102</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5539" parent="1" name="##MS_SQLAuthenticatorCertificate##">
+    <login id="5540" parent="1" name="##MS_SQLAuthenticatorCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>103</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5540" parent="1" name="##MS_PolicySigningCertificate##">
+    <login id="5541" parent="1" name="##MS_PolicySigningCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>105</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5541" parent="1" name="##MS_SmoExtendedSigningCertificate##">
+    <login id="5542" parent="1" name="##MS_SmoExtendedSigningCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>106</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5542" parent="1" name="##MS_PolicyEventProcessingLogin##">
+    <login id="5543" parent="1" name="##MS_PolicyEventProcessingLogin##">
       <DefaultDatabase>master</DefaultDatabase>
       <ObjectId>256</ObjectId>
     </login>
-    <login id="5543" parent="1" name="##MS_PolicyTsqlExecutionLogin##">
+    <login id="5544" parent="1" name="##MS_PolicyTsqlExecutionLogin##">
       <DefaultDatabase>master</DefaultDatabase>
       <ObjectId>257</ObjectId>
     </login>
-    <login id="5544" parent="1" name="##MS_AgentSigningCertificate##">
+    <login id="5545" parent="1" name="##MS_AgentSigningCertificate##">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>258</ObjectId>
       <Type>certificate-mapped-login</Type>
     </login>
-    <login id="5545" parent="1" name="monax\maxff">
+    <login id="5546" parent="1" name="monax\maxff">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>259</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5546" parent="1" name="NT SERVICE\SQLWriter">
+    <login id="5547" parent="1" name="NT SERVICE\SQLWriter">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>260</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5547" parent="1" name="NT SERVICE\Winmgmt">
+    <login id="5548" parent="1" name="NT SERVICE\Winmgmt">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>261</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5548" parent="1" name="NT Service\MSSQLSERVER">
+    <login id="5549" parent="1" name="NT Service\MSSQLSERVER">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>262</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5549" parent="1" name="NT AUTHORITY\СИСТЕМА">
+    <login id="5550" parent="1" name="NT AUTHORITY\СИСТЕМА">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>263</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5550" parent="1" name="NT SERVICE\SQLSERVERAGENT">
+    <login id="5551" parent="1" name="NT SERVICE\SQLSERVERAGENT">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>264</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5551" parent="1" name="NT SERVICE\SQLTELEMETRY">
+    <login id="5552" parent="1" name="NT SERVICE\SQLTELEMETRY">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>265</ObjectId>
       <Type>windows-login</Type>
     </login>
-    <login id="5552" parent="1" name="questionnaires">
+    <login id="5553" parent="1" name="questionnaires">
       <DefaultDatabase>master</DefaultDatabase>
       <Enabled>1</Enabled>
       <ObjectId>266</ObjectId>
     </login>
-    <assembly id="5553" parent="5510" name="Microsoft.SqlServer.Types">
+    <assembly id="5554" parent="5516" name="Microsoft.SqlServer.Types">
       <ObjectId>1</ObjectId>
       <Visible>1</Visible>
     </assembly>
-    <filegroup id="5554" parent="5510" name="PRIMARY">
+    <filegroup id="5555" parent="5516" name="PRIMARY">
       <DefaultGroup>1</DefaultGroup>
       <ObjectId>1</ObjectId>
     </filegroup>
-    <role id="5555" parent="5510" name="INFORMATION_SCHEMA">
+    <role id="5556" parent="5516" name="INFORMATION_SCHEMA">
       <AuthType>none</AuthType>
       <ObjectId>3</ObjectId>
     </role>
-    <role id="5556" parent="5510" name="db_accessadmin">
+    <role id="5557" parent="5516" name="db_accessadmin">
       <AuthType>none</AuthType>
       <ObjectId>16385</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5557" parent="5510" name="db_backupoperator">
+    <role id="5558" parent="5516" name="db_backupoperator">
       <AuthType>none</AuthType>
       <ObjectId>16389</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5558" parent="5510" name="db_datareader">
+    <role id="5559" parent="5516" name="db_datareader">
       <AuthType>none</AuthType>
       <ObjectId>16390</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5559" parent="5510" name="db_datawriter">
+    <role id="5560" parent="5516" name="db_datawriter">
       <AuthType>none</AuthType>
       <ObjectId>16391</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5560" parent="5510" name="db_ddladmin">
+    <role id="5561" parent="5516" name="db_ddladmin">
       <AuthType>none</AuthType>
       <ObjectId>16387</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5561" parent="5510" name="db_denydatareader">
+    <role id="5562" parent="5516" name="db_denydatareader">
       <AuthType>none</AuthType>
       <ObjectId>16392</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5562" parent="5510" name="db_denydatawriter">
+    <role id="5563" parent="5516" name="db_denydatawriter">
       <AuthType>none</AuthType>
       <ObjectId>16393</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5563" parent="5510" name="db_owner">
+    <role id="5564" parent="5516" name="db_owner">
       <AuthType>none</AuthType>
       <ObjectId>16384</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5564" parent="5510" name="db_securityadmin">
+    <role id="5565" parent="5516" name="db_securityadmin">
       <AuthType>none</AuthType>
       <ObjectId>16386</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5565" parent="5510" name="dbo">
+    <role id="5566" parent="5516" name="dbo">
       <AuthType>windows</AuthType>
       <DefaultSchema>dbo</DefaultSchema>
       <ObjectId>1</ObjectId>
       <Type>windows-user</Type>
     </role>
-    <role id="5566" parent="5510" name="guest">
+    <role id="5567" parent="5516" name="guest">
       <AuthType>none</AuthType>
       <DefaultSchema>guest</DefaultSchema>
       <ObjectId>2</ObjectId>
     </role>
-    <role id="5567" parent="5510" name="public">
+    <role id="5568" parent="5516" name="public">
       <AuthType>none</AuthType>
       <ObjectId>0</ObjectId>
       <Type>database-role</Type>
       <OwnerId>1</OwnerId>
     </role>
-    <role id="5568" parent="5510" name="sys">
+    <role id="5569" parent="5516" name="sys">
       <AuthType>none</AuthType>
       <ObjectId>4</ObjectId>
     </role>
-    <schema id="5569" parent="5510" name="INFORMATION_SCHEMA">
+    <schema id="5570" parent="5516" name="INFORMATION_SCHEMA">
       <ObjectId>3</ObjectId>
     </schema>
-    <schema id="5570" parent="5510" name="db_accessadmin">
+    <schema id="5571" parent="5516" name="db_accessadmin">
       <ObjectId>16385</ObjectId>
     </schema>
-    <schema id="5571" parent="5510" name="db_backupoperator">
+    <schema id="5572" parent="5516" name="db_backupoperator">
       <ObjectId>16389</ObjectId>
     </schema>
-    <schema id="5572" parent="5510" name="db_datareader">
+    <schema id="5573" parent="5516" name="db_datareader">
       <ObjectId>16390</ObjectId>
     </schema>
-    <schema id="5573" parent="5510" name="db_datawriter">
+    <schema id="5574" parent="5516" name="db_datawriter">
       <ObjectId>16391</ObjectId>
     </schema>
-    <schema id="5574" parent="5510" name="db_ddladmin">
+    <schema id="5575" parent="5516" name="db_ddladmin">
       <ObjectId>16387</ObjectId>
     </schema>
-    <schema id="5575" parent="5510" name="db_denydatareader">
+    <schema id="5576" parent="5516" name="db_denydatareader">
       <ObjectId>16392</ObjectId>
     </schema>
-    <schema id="5576" parent="5510" name="db_denydatawriter">
+    <schema id="5577" parent="5516" name="db_denydatawriter">
       <ObjectId>16393</ObjectId>
     </schema>
-    <schema id="5577" parent="5510" name="db_owner">
+    <schema id="5578" parent="5516" name="db_owner">
       <ObjectId>16384</ObjectId>
     </schema>
-    <schema id="5578" parent="5510" name="db_securityadmin">
+    <schema id="5579" parent="5516" name="db_securityadmin">
       <ObjectId>16386</ObjectId>
     </schema>
-    <schema id="5579" parent="5510" name="dbo">
+    <schema id="5580" parent="5516" name="dbo">
       <Current>1</Current>
-      <DescriptionsCheckSum>9461034704</DescriptionsCheckSum>
-      <Grants>869578136|||0|execute|G
-869578136|||2|execute|D
-885578193|||0|execute|G
-885578193|||2|execute|D
-901578250|||0|execute|G
-901578250|||2|execute|D
-917578307|||0|execute|G
-917578307|||2|execute|D
-933578364|||0|execute|G
-933578364|||2|execute|D
-949578421|||0|execute|G
-949578421|||2|execute|D
-965578478|||0|execute|G
-965578478|||2|execute|D</Grants>
-      <IntrospectionTimestamp>2024-01-13.16:23:19.943</IntrospectionTimestamp>
-      <LastIntrospectionLocalTimestamp>2024-01-13.10:23:19</LastIntrospectionLocalTimestamp>
+      <IntrospectionTimestamp>2024-01-15.22:07:50.827</IntrospectionTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-01-15.16:07:50</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
-      <PermissionsCheckSum>11541264577</PermissionsCheckSum>
     </schema>
-    <schema id="5580" parent="5510" name="guest">
+    <schema id="5581" parent="5516" name="guest">
       <ObjectId>2</ObjectId>
     </schema>
-    <schema id="5581" parent="5510" name="sys">
+    <schema id="5582" parent="5516" name="sys">
       <ObjectId>4</ObjectId>
     </schema>
-    <routine id="5582" parent="5579" name="fn_ClientOrders">
-      <CreatedTimestamp>2023-10-30.16:23:15.910</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.16:23:15.910</ModifiedTimestamp>
-      <ObjectId>1605580758</ObjectId>
-      <RoutineType>tab-fun</RoutineType>
-      <SourceTextLength>2688</SourceTextLength>
-    </routine>
-    <routine id="5583" parent="5579" name="fn_OrderItems">
-      <CreatedTimestamp>2023-10-30.16:19:35.220</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.16:19:35.220</ModifiedTimestamp>
-      <ObjectId>1589580701</ObjectId>
-      <RoutineType>tab-fun</RoutineType>
-      <SourceTextLength>1902</SourceTextLength>
-    </routine>
-    <routine id="5584" parent="5579" name="fn_OrderTotal">
-      <CreatedTimestamp>2023-10-30.16:18:53.230</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.16:18:53.230</ModifiedTimestamp>
-      <ObjectId>1573580644</ObjectId>
-      <RoutineType>scalar-fun</RoutineType>
-      <SourceTextLength>1609</SourceTextLength>
-    </routine>
-    <routine id="5585" parent="5579" name="fn_diagramobjects">
-      <CreatedTimestamp>2023-10-02.18:02:21.313</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.313</ModifiedTimestamp>
-      <ObjectId>965578478</ObjectId>
-      <RoutineType>scalar-fun</RoutineType>
-      <SourceTextLength>1647</SourceTextLength>
-    </routine>
-    <routine id="5586" parent="5579" name="sp_alterdiagram">
-      <CreatedTimestamp>2023-10-02.18:02:21.307</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.307</ModifiedTimestamp>
-      <ObjectId>933578364</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>1501</SourceTextLength>
-    </routine>
-    <routine id="5587" parent="5579" name="sp_creatediagram">
-      <CreatedTimestamp>2023-10-02.18:02:21.300</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.300</ModifiedTimestamp>
-      <ObjectId>901578250</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>1223</SourceTextLength>
-    </routine>
-    <routine id="5588" parent="5579" name="sp_dropdiagram">
-      <CreatedTimestamp>2023-10-02.18:02:21.310</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.310</ModifiedTimestamp>
-      <ObjectId>949578421</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>896</SourceTextLength>
-    </routine>
-    <routine id="5589" parent="5579" name="sp_helpdiagramdefinition">
-      <CreatedTimestamp>2023-10-02.18:02:21.300</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.300</ModifiedTimestamp>
-      <ObjectId>885578193</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>921</SourceTextLength>
-    </routine>
-    <routine id="5590" parent="5579" name="sp_helpdiagrams">
-      <CreatedTimestamp>2023-10-02.18:02:21.293</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.293</ModifiedTimestamp>
-      <ObjectId>869578136</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>658</SourceTextLength>
-    </routine>
-    <routine id="5591" parent="5579" name="sp_renamediagram">
-      <CreatedTimestamp>2023-10-02.18:02:21.303</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.303</ModifiedTimestamp>
-      <ObjectId>917578307</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>1721</SourceTextLength>
-    </routine>
-    <routine id="5592" parent="5579" name="sp_upgraddiagrams">
-      <CreatedTimestamp>2023-10-02.18:02:21.283</CreatedTimestamp>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.283</ModifiedTimestamp>
-      <ObjectId>805577908</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>1463</SourceTextLength>
-    </routine>
-    <routine id="5593" parent="5579" name="usp_ClientsLastMonth">
-      <CreatedTimestamp>2023-10-30.15:57:28.900</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.15:57:28.900</ModifiedTimestamp>
+    <table id="5583" parent="5580" name="Accounts">
+      <CreatedTimestamp>2024-01-15.14:41:48.207</CreatedTimestamp>
+      <DataRetentionPeriod>-1</DataRetentionPeriod>
+      <ModifiedTimestamp>2024-01-15.14:41:48.207</ModifiedTimestamp>
       <ObjectId>1525580473</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>197</SourceTextLength>
-    </routine>
-    <routine id="5594" parent="5579" name="usp_OrderItems">
-      <CreatedTimestamp>2023-10-30.16:00:15.100</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.16:00:15.100</ModifiedTimestamp>
-      <ObjectId>1541580530</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>531</SourceTextLength>
-    </routine>
-    <routine id="5595" parent="5579" name="usp_TomorrowOrders">
-      <CreatedTimestamp>2023-10-30.16:18:05.063</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-30.16:18:05.063</ModifiedTimestamp>
-      <ObjectId>1557580587</ObjectId>
-      <RoutineType>proc</RoutineType>
-      <SourceTextLength>1233</SourceTextLength>
-    </routine>
-    <table id="5596" parent="5579" name="sysdiagrams">
-      <CreatedTimestamp>2023-10-02.18:02:21.290</CreatedTimestamp>
+      <LobDataSpaceId>0</LobDataSpaceId>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
+    </table>
+    <table id="5584" parent="5580" name="Answers">
+      <CreatedTimestamp>2024-01-15.15:12:04.593</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ExtendedProperties>microsoft_database_tools_support
-1
-int</ExtendedProperties>
-      <ModifiedTimestamp>2023-10-02.18:02:21.290</ModifiedTimestamp>
-      <ObjectId>821577965</ObjectId>
+      <ModifiedTimestamp>2024-01-15.15:12:04.593</ModifiedTimestamp>
+      <ObjectId>1637580872</ObjectId>
       <LobDataSpaceId>1</LobDataSpaceId>
-    </table>
-    <table id="5597" parent="5579" name="АрхивЗаказов">
-      <CreatedTimestamp>2023-10-15.14:24:17.503</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-15.14:24:17.503</ModifiedTimestamp>
-      <ObjectId>1205579333</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
       <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </table>
-    <table id="5598" parent="5579" name="Группы">
-      <CreatedTimestamp>2023-10-02.17:47:59.270</CreatedTimestamp>
+    <table id="5585" parent="5580" name="AvailableGroups">
+      <CreatedTimestamp>2024-01-15.15:15:43.430</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-02.17:50:06.837</ModifiedTimestamp>
-      <ObjectId>645577338</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
+      <ModifiedTimestamp>2024-01-15.15:15:43.430</ModifiedTimestamp>
+      <ObjectId>1653580929</ObjectId>
+      <LobDataSpaceId>1</LobDataSpaceId>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </table>
-    <table id="5599" parent="5579" name="Заказы">
-      <CreatedTimestamp>2023-10-02.17:48:08.140</CreatedTimestamp>
+    <table id="5586" parent="5580" name="Questionnaires">
+      <CreatedTimestamp>2024-01-15.15:10:34.317</CreatedTimestamp>
       <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-15.14:29:46.657</ModifiedTimestamp>
-      <ObjectId>677577452</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
+      <ModifiedTimestamp>2024-01-15.15:10:34.317</ModifiedTimestamp>
+      <ObjectId>1621580815</ObjectId>
+      <LobDataSpaceId>1</LobDataSpaceId>
+      <PartitionDataSpaceId>1</PartitionDataSpaceId>
     </table>
-    <table id="5600" parent="5579" name="Клиенты">
-      <CreatedTimestamp>2023-10-02.17:47:42.423</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-02.17:50:06.840</ModifiedTimestamp>
-      <ObjectId>581577110</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
-    </table>
-    <table id="5601" parent="5579" name="ТоварЗаказ">
-      <CreatedTimestamp>2023-10-02.17:48:15.827</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-02.17:50:06.843</ModifiedTimestamp>
-      <ObjectId>709577566</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
-    </table>
-    <table id="5602" parent="5579" name="Товары">
-      <CreatedTimestamp>2023-10-02.17:47:51.227</CreatedTimestamp>
-      <DataRetentionPeriod>-1</DataRetentionPeriod>
-      <ModifiedTimestamp>2023-10-02.17:50:06.840</ModifiedTimestamp>
-      <ObjectId>613577224</ObjectId>
-      <LobDataSpaceId>0</LobDataSpaceId>
-    </table>
-    <argument id="5603" parent="5582" name="@Date">
-      <DasType>date|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <column id="5604" parent="5582" name="Клиент">
-      <DasType>nvarchar(100 char)|0s</DasType>
+    <column id="5587" parent="5583" name="Login">
+      <DasType>varchar(255 char)|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="5605" parent="5582" name="Адрес">
-      <DasType>nvarchar(100 char)|0s</DasType>
+    <column id="5588" parent="5583" name="Password">
+      <DasType>varchar(255 char)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="5606" parent="5582" name="Заказ">
-      <DasType>int|0s</DasType>
+    <partition id="5589" parent="5583">
+      <ObjectId>72057594045792256</ObjectId>
+      <Position>1</Position>
+    </partition>
+    <column id="5590" parent="5584" name="QuestionnaireName">
+      <DasType>varchar(255 char)|0s</DasType>
+      <Position>1</Position>
+    </column>
+    <column id="5591" parent="5584" name="GroupNumber">
+      <DasType>varchar(max)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="5592" parent="5584" name="Answers">
+      <DasType>varchar(255 char)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="5607" parent="5582" name="Сумма">
-      <DasType>money|0s</DasType>
+    <partition id="5593" parent="5584">
+      <ObjectId>72057594046119936</ObjectId>
+      <Position>1</Position>
+    </partition>
+    <column id="5594" parent="5585" name="Groups">
+      <DasType>varchar(max)|0s</DasType>
+      <Position>1</Position>
+    </column>
+    <partition id="5595" parent="5585">
+      <ObjectId>72057594046185472</ObjectId>
+      <Position>1</Position>
+    </partition>
+    <column id="5596" parent="5586" name="QuestionnaireName">
+      <DasType>varchar(255 char)|0s</DasType>
+      <Position>1</Position>
+    </column>
+    <column id="5597" parent="5586" name="Questions">
+      <DasType>varchar(max)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="5598" parent="5586" name="Answers">
+      <DasType>varchar(max)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="5599" parent="5586" name="Groups">
+      <DasType>varchar(max)|0s</DasType>
       <Position>4</Position>
     </column>
-    <argument id="5608" parent="5583" name="@OrderId">
-      <DasType>int|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <column id="5609" parent="5583" name="Товар">
-      <DasType>nvarchar(100 char)|0s</DasType>
-      <Position>1</Position>
-    </column>
-    <column id="5610" parent="5583" name="Количество">
-      <DasType>int|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="5611" parent="5583" name="Цена">
-      <DasType>money|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="5612" parent="5583" name="Сумма">
-      <DasType>money|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <argument id="5613" parent="5584">
-      <ArgumentDirection>R</ArgumentDirection>
-      <DasType>money|0s</DasType>
-    </argument>
-    <argument id="5614" parent="5584" name="@Date">
-      <DasType>date|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5615" parent="5585">
-      <ArgumentDirection>R</ArgumentDirection>
-      <DasType>int|0s</DasType>
-    </argument>
-    <argument id="5616" parent="5586" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5617" parent="5586" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>null</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5618" parent="5586" name="@version">
-      <DasType>int|0s</DasType>
-      <Position>3</Position>
-    </argument>
-    <argument id="5619" parent="5586" name="@definition">
-      <DasType>varbinary(max)|0s</DasType>
-      <Position>4</Position>
-    </argument>
-    <argument id="5620" parent="5587" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5621" parent="5587" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>null</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5622" parent="5587" name="@version">
-      <DasType>int|0s</DasType>
-      <Position>3</Position>
-    </argument>
-    <argument id="5623" parent="5587" name="@definition">
-      <DasType>varbinary(max)|0s</DasType>
-      <Position>4</Position>
-    </argument>
-    <argument id="5624" parent="5588" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5625" parent="5588" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>null</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5626" parent="5589" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5627" parent="5589" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>null</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5628" parent="5590" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <DefaultExpression>NULL</DefaultExpression>
-      <Position>1</Position>
-    </argument>
-    <argument id="5629" parent="5590" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>NULL</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5630" parent="5591" name="@diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5631" parent="5591" name="@owner_id">
-      <DasType>int|0s</DasType>
-      <DefaultExpression>null</DefaultExpression>
-      <Position>2</Position>
-    </argument>
-    <argument id="5632" parent="5591" name="@new_diagramname">
-      <DasType>sysname|0s</DasType>
-      <Position>3</Position>
-    </argument>
-    <argument id="5633" parent="5594" name="@OrderId">
-      <DasType>int|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <argument id="5634" parent="5595" name="@Total">
-      <ArgumentDirection>O</ArgumentDirection>
-      <DasType>money|0s</DasType>
-      <Position>1</Position>
-    </argument>
-    <column id="5635" parent="5596" name="name">
-      <DasType>sysname|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="5636" parent="5596" name="principal_id">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-    </column>
-    <column id="5637" parent="5596" name="diagram_id">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <SequenceIdentity>1(2)</SequenceIdentity>
-    </column>
-    <column id="5638" parent="5596" name="version">
-      <DasType>int|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <column id="5639" parent="5596" name="definition">
-      <DasType>varbinary(max)|0s</DasType>
+    <column id="5600" parent="5586" name="ProfessorName">
+      <DasType>varchar(255 char)|0s</DasType>
       <Position>5</Position>
     </column>
-    <index id="5640" parent="5596" name="PK__sysdiagr__C2B05B61C416DFE3">
-      <Clustering>1</Clustering>
-      <ColNames>diagram_id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <index id="5641" parent="5596" name="UK_principal_name">
-      <ColNames>principal_id
-name</ColNames>
-      <Position>2</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5642" parent="5596" name="PK__sysdiagr__C2B05B61C416DFE3">
-      <CreatedTimestamp>2023-10-02.18:02:21.290</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.18:02:21.290</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>837578022</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__sysdiagr__C2B05B61C416DFE3</UnderlyingIndexName>
-    </key>
-    <key id="5643" parent="5596" name="UK_principal_name">
-      <CreatedTimestamp>2023-10-02.18:02:21.290</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.18:02:21.290</ModifiedTimestamp>
-      <ObjectId>853578079</ObjectId>
-      <UnderlyingIndexName>UK_principal_name</UnderlyingIndexName>
-    </key>
-    <column id="5644" parent="5597" name="Код_заказа">
-      <DasType>int|0s</DasType>
-      <Position>1</Position>
-    </column>
-    <column id="5645" parent="5597" name="Дата">
-      <DasType>date|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <partition id="5646" parent="5597">
-      <ObjectId>72057594043629568</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <column id="5647" parent="5598" name="Код_группы">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <SequenceIdentity>1(6)</SequenceIdentity>
-    </column>
-    <column id="5648" parent="5598" name="Группа">
-      <DasType>nvarchar(50 char)|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <index id="5649" parent="5598" name="PK__Группы__A70793F3D1E60CCE">
-      <Clustering>1</Clustering>
-      <ColNames>Код_группы</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5650" parent="5598" name="PK__Группы__A70793F3D1E60CCE">
-      <CreatedTimestamp>2023-10-02.17:47:59.273</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:47:59.273</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>661577395</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__Группы__A70793F3D1E60CCE</UnderlyingIndexName>
-    </key>
-    <column id="5651" parent="5599" name="Код_заказа">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <SequenceIdentity>1(31)</SequenceIdentity>
-    </column>
-    <column id="5652" parent="5599" name="Номер_заказа">
-      <DasType>int|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="5653" parent="5599" name="Дата">
-      <DasType>date|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="5654" parent="5599" name="Код_Клиента">
-      <DasType>int|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <column id="5655" parent="5599" name="Сумма">
-      <DasType>money|0s</DasType>
-      <Position>5</Position>
-    </column>
-    <foreign-key id="5656" parent="5599" name="FK__Заказы__Код_Клие__2D27B809">
-      <ColNames>Код_Клиента</ColNames>
-      <CreatedTimestamp>2023-10-02.17:50:06.840</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:50:06.840</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>757577737</ObjectId>
-      <RefColNames>Код_клиента</RefColNames>
-      <RefTableId>581577110</RefTableId>
-      <RefTableName>Клиенты</RefTableName>
-    </foreign-key>
-    <index id="5657" parent="5599" name="PK__Заказы__02EAB0F5E7F25D3B">
-      <Clustering>1</Clustering>
-      <ColNames>Код_заказа</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5658" parent="5599" name="PK__Заказы__02EAB0F5E7F25D3B">
-      <CreatedTimestamp>2023-10-02.17:48:08.140</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:48:08.140</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>693577509</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__Заказы__02EAB0F5E7F25D3B</UnderlyingIndexName>
-    </key>
-    <column id="5659" parent="5600" name="Код_клиента">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <SequenceIdentity>1(11)</SequenceIdentity>
-    </column>
-    <column id="5660" parent="5600" name="Фамилия">
-      <DasType>nvarchar(50 char)|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="5661" parent="5600" name="Имя">
-      <DasType>nvarchar(50 char)|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="5662" parent="5600" name="Отчество">
-      <DasType>nvarchar(50 char)|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <column id="5663" parent="5600" name="Телефон">
-      <DasType>nvarchar(20 char)|0s</DasType>
-      <Position>5</Position>
-    </column>
-    <column id="5664" parent="5600" name="Адрес">
-      <DasType>nvarchar(100 char)|0s</DasType>
-      <Position>6</Position>
-    </column>
-    <index id="5665" parent="5600" name="PK__Клиенты__3480254DE3400287">
-      <Clustering>1</Clustering>
-      <ColNames>Код_клиента</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5666" parent="5600" name="PK__Клиенты__3480254DE3400287">
-      <CreatedTimestamp>2023-10-02.17:47:42.427</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:47:42.427</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>597577167</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__Клиенты__3480254DE3400287</UnderlyingIndexName>
-    </key>
-    <column id="5667" parent="5601" name="Код_записи">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <SequenceIdentity>1(15)</SequenceIdentity>
-    </column>
-    <column id="5668" parent="5601" name="Код_Заказа">
-      <DasType>int|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="5669" parent="5601" name="Код_товара">
-      <DasType>int|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="5670" parent="5601" name="Количество">
-      <DasType>int|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <foreign-key id="5671" parent="5601" name="FK__ТоварЗака__Код_З__2E1BDC42">
-      <ColNames>Код_Заказа</ColNames>
-      <CreatedTimestamp>2023-10-02.17:50:06.840</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:50:06.840</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>773577794</ObjectId>
-      <RefColNames>Код_заказа</RefColNames>
-      <RefTableId>677577452</RefTableId>
-      <RefTableName>Заказы</RefTableName>
-    </foreign-key>
-    <foreign-key id="5672" parent="5601" name="FK__ТоварЗака__Код_т__2F10007B">
-      <ColNames>Код_товара</ColNames>
-      <CreatedTimestamp>2023-10-02.17:50:06.840</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:50:06.840</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>789577851</ObjectId>
-      <RefColNames>Код_товара</RefColNames>
-      <RefTableId>613577224</RefTableId>
-      <RefTableName>Товары</RefTableName>
-    </foreign-key>
-    <index id="5673" parent="5601" name="PK__ТоварЗак__C0C4DC86A8076C6B">
-      <Clustering>1</Clustering>
-      <ColNames>Код_записи</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5674" parent="5601" name="PK__ТоварЗак__C0C4DC86A8076C6B">
-      <CreatedTimestamp>2023-10-02.17:48:15.827</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:48:15.827</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>725577623</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__ТоварЗак__C0C4DC86A8076C6B</UnderlyingIndexName>
-    </key>
-    <column id="5675" parent="5602" name="Код_товара">
-      <DasType>int|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <SequenceIdentity>1(12)</SequenceIdentity>
-    </column>
-    <column id="5676" parent="5602" name="Код_группы">
-      <DasType>int|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="5677" parent="5602" name="Товар">
-      <DasType>nvarchar(100 char)|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="5678" parent="5602" name="Цена">
-      <DasType>money|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <foreign-key id="5679" parent="5602" name="FK__Товары__Код_груп__2C3393D0">
-      <ColNames>Код_группы</ColNames>
-      <CreatedTimestamp>2023-10-02.17:50:06.827</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:50:06.827</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>741577680</ObjectId>
-      <RefColNames>Код_группы</RefColNames>
-      <RefTableId>645577338</RefTableId>
-      <RefTableName>Группы</RefTableName>
-    </foreign-key>
-    <index id="5680" parent="5602" name="PK__Товары__E057B5DEB09535BC">
-      <Clustering>1</Clustering>
-      <ColNames>Код_товара</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <Position>1</Position>
-      <Unique>1</Unique>
-      <PartitionDataSpaceId>1</PartitionDataSpaceId>
-    </index>
-    <key id="5681" parent="5602" name="PK__Товары__E057B5DEB09535BC">
-      <CreatedTimestamp>2023-10-02.17:47:51.227</CreatedTimestamp>
-      <ModifiedTimestamp>2023-10-02.17:47:51.227</ModifiedTimestamp>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>629577281</ObjectId>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PK__Товары__E057B5DEB09535BC</UnderlyingIndexName>
-    </key>
-    <partition id="5682" parent="5640">
-      <ObjectId>72057594043498496</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5683" parent="5641">
-      <ObjectId>72057594043564032</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5684" parent="5649">
-      <ObjectId>72057594043301888</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5685" parent="5657">
-      <ObjectId>72057594043367424</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5686" parent="5665">
-      <ObjectId>72057594043170816</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5687" parent="5673">
-      <ObjectId>72057594043432960</ObjectId>
-      <Position>1</Position>
-    </partition>
-    <partition id="5688" parent="5680">
-      <ObjectId>72057594043236352</ObjectId>
+    <partition id="5601" parent="5586">
+      <ObjectId>72057594046054400</ObjectId>
       <Position>1</Position>
     </partition>
   </database-model>

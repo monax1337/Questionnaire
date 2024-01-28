@@ -22,7 +22,31 @@ server.on('connection', async (ws: WebSocket) => {
         const msg: any[] = JSON.parse(message);
 
         switch (msg[0]) {
+            case 'RequestForAvailableGroups':
+                const pool0 = await sql.connect(config);
 
+                const result0 = await pool0.request()
+                    .query(`
+                        SELECT *
+                        FROM AvailableGroups
+                    `);
+
+                pool0.close();
+
+                let availabelGroupsArray: string[] = [];
+                let faculties: string;
+                let groups: string;
+                for (let i = 0; i < result0.recordset.length; i++) {
+                    faculties = JSON.parse(result0.recordset[i].Faculty);
+                    groups = JSON.parse(result0.recordset[i].Groups);
+
+                    availabelGroupsArray.push(faculties);
+                    availabelGroupsArray.push(groups);
+
+                }
+
+                ws.send(JSON.stringify(['AvailableGroups', availabelGroupsArray]));
+                break;
             case 'RequestForQuestionnaireStudent':
 
                 const pool1 = await sql.connect(config);

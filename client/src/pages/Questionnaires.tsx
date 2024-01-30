@@ -15,6 +15,33 @@ const Questionnaires = () => {
     const socket = new WebSocket('ws://localhost:8080');
     let enteredQuestionnaire = "10701321";
 
+    //const socket = useSelector((state: RootState) => state.socket);
+    //const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     if(socket) {
+    //         socket.onopen(JSON.stringify([
+    //             "RequestForQuestionnaireStudent",
+    //             enteredQuestionnaire
+    //         ]));
+    //     }
+    // }, [socket]);
+    //
+    // useEffect(() => {
+    //     if(socket) {
+    //         socket.onmessage = (event) => {
+    //             const data = JSON.parse(event.data)[1];
+    //             setAvailableQuestionnaires(data);
+    //         };
+    //     }
+    //
+    //     return () => {
+    //         if(socket) {
+    //             socket.onmessage = null;
+    //         }
+    //     }
+    // }, [socket]);
+
     useEffect(() => {
         socket.onopen = () => {
             console.log('WebSocket connection opened.');

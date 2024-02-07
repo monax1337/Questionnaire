@@ -33,44 +33,31 @@ server.on('connection', async (ws: WebSocket) => {
 
                 pool0.close();
 
-                let availabelGroupsArray: string[] = [];
-                let faculties: string;
-                let groups: string;
+                let availableGroupsArray: string[] = [];
                 for (let i = 0; i < result0.recordset.length; i++) {
-                    faculties = JSON.parse(result0.recordset[i].Faculty);
-                    groups = JSON.parse(result0.recordset[i].Groups);
-
-                    availabelGroupsArray.push(faculties);
-                    availabelGroupsArray.push(groups);
-
+                    availableGroupsArray.push(result0.recordset[i].Groups);
                 }
 
-                ws.send(JSON.stringify(['AvailableGroups', availabelGroupsArray]));
+                ws.send(JSON.stringify(['AvailableGroups', availableGroupsArray]));
                 break;
+
             case 'RequestForQuestionnaireStudent':
 
                 const pool1 = await sql.connect(config);
 
                 const result1 = await pool1.request()
                     .query(`
-                        SELECT QuestionnaireName, Groups
+                        SELECT SurveyName
                         FROM Questionnaires
+                        WHERE Groups = 'Все' OR Groups LIKE '%${msg[1]}%'
                     `);
 
                 pool1.close();
 
-                let groupsArray: string[] = [];
                 const questionnaires1: string[] = [];
 
                 for (let i = 0; i < result1.recordset.length; i++) {
-                    if (result1.recordset[i].Groups === 'Все') {
-                        questionnaires1.push(result1.recordset[i].QuestionnaireName);
-                    } else {
-                        groupsArray = JSON.parse(result1.recordset[i].Groups);
-                        if (groupsArray.includes(msg[1])) {
-                            questionnaires1.push(result1.recordset[i].QuestionnaireName);
-                        }
-                    }
+                    questionnaires1.push(result1.recordset[i].SurveyName);
                 }
 
                 ws.send(JSON.stringify(['AvailableQuestionnaires', questionnaires1]));
@@ -83,7 +70,7 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result2 = await pool2.request()
                     .query(`
-                        SELECT QuestionnaireName
+                        SELECT SurveyName
                         FROM Questionnaires
                         WHERE ProfessorName = '${msg[1]}'
                     `);
@@ -93,7 +80,7 @@ server.on('connection', async (ws: WebSocket) => {
                 const questionnaires2: string[] = [];
 
                 for (let i = 0; i < result2.recordset.length; i++) {
-                    questionnaires2.push(result2.recordset[i].QuestionnaireName);
+                    questionnaires2.push(result2.recordset[i].SurveyName);
                 }
 
                 ws.send(JSON.stringify(['AvailableQuestionnaires', questionnaires2]));
@@ -106,25 +93,24 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result3 = await pool3.request()
                     .query(`
-                        SELECT Questions, Answers
-                        FROM Questionnaires
-                        WHERE QuestionnaireName = '${msg[1]}'
+                        SELECT QuestionText
+                        FROM SurveyQuestions
+                        WHERE questionnaire_id = (
+                            SELECT id
+                            FROM Questionnaires
+                            WHERE SurveyName = '${msg[1]}'
+                        )
                     `);
 
                 pool3.close();
 
                 const questions: string[] = [];
-                const answers: string[] = [];
 
                 for (let i = 0; i < result3.recordset.length; i++) {
-                    const arr1 = result3.recordset[i].Questions.split('~');
-                    const arr2 = result3.recordset[i].Answers.split('~');
-
-                    questions.push(...arr1);
-                    answers.push(...arr2);
+                    questions.push(result3.recordset[i].QuestionText);
                 }
 
-                ws.send(JSON.stringify(['SendQuestion', questions, answers]));
+                ws.send(JSON.stringify(['SendQuestion', questions]));
 
                 break;
 
@@ -133,16 +119,32 @@ server.on('connection', async (ws: WebSocket) => {
                 const pool4 = await sql.connect(config);
 
                 const data4 = {
-                    QuestionnaireName: msg[3],
-                    GroupNumber: msg[2],
-                    Answers: JSON.stringify(msg[1]),
+                    questionnaire_id: (
+                        await pool4.request()
+                            .query(`
+                                SELECT id
+                                FROM Questionnaires
+                                WHERE SurveyName = '${msg[3]}'
+                            `)
+                    ).recordset[0].id,
+                    group_id: (
+                        await pool4.request()
+                            .query(`
+                                SELECT id
+                                FROM AvailableGroups
+                                WHERE Groups LIKE '%${msg[2]}%'
+                            `)
+                    ).recordset[0].id,
+                    question_id: msg[4],
+                    answer_id: msg[5],
+                    answers_json: JSON.stringify(msg[1])
                 };
 
                 const result4 = await pool4.request()
                     .query`
                     INSERT INTO Answers
-                        (QuestionnaireName, GroupNumber, Answers)
-                    VALUES (@QuestionnaireName, @GroupNumber, @Answers)
+                        (questionnaire_id, group_id, question_id, answer_id, answers_json)
+                    VALUES (@questionnaire_id, @group_id, @question_id, @answer_id, @answers_json)
                 `;
 
                 pool4.close();
@@ -160,17 +162,15 @@ server.on('connection', async (ws: WebSocket) => {
                 const pool5 = await sql.connect(config);
 
                 const data5 = {
-                    QuestionnaireName: msg[1],
+                    SurveyName: msg[1],
                     Questions: msg[2],
-                    Answers: msg[3],
-                    Groups: msg[4],
-                    ProfessorName: msg[5],
+                    ProfessorName: msg[5]
                 };
                 const result5 = await pool5.request()
                     .query`
-                    INSERT INTO Questionnairesdata
-                        (QuestionnaireName, Questions, Answers, Groups, ProfessorName)
-                    VALUES (@QuestionnaireName, @Questions, @Answers, @Groups, @ProfessorName)
+                    INSERT INTO Questionnaires
+                        (SurveyName, Questions, ProfessorName)
+                    VALUES (@SurveyName, @Questions, @ProfessorName)
                 `;
 
                 pool5.close();

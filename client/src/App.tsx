@@ -3,18 +3,17 @@ import {ThemeProvider} from "@mui/material";
 import {theme} from "./Theme/theme";
 import {BrowserRouter} from "react-router-dom";
 import AppRouter from "./Components/AppRouter";
-import {Provider} from "react-redux";
-// import {store} from "./store";
+import {WebSocketProvider} from "./Contexts/WebSocketContext";
 
 const App = () => {
     return (
-        // <Provider store={store}>
+        <WebSocketProvider>
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <AppRouter />
+                    <AppRouter/>
                 </BrowserRouter>
             </ThemeProvider>
-        // </Provider>
+        </WebSocketProvider>
     );
 };
 

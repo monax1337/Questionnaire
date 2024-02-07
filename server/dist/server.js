@@ -27,26 +27,32 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
     ws.on('message', (message) => __awaiter(void 0, void 0, void 0, function* () {
         const msg = JSON.parse(message);
         switch (msg[0]) {
+            case 'RequestForAvailableGroups':
+                const pool0 = yield sql.connect(config);
+                const result0 = yield pool0.request()
+                    .query(`
+                        SELECT *
+                        FROM AvailableGroups
+                    `);
+                pool0.close();
+                let availableGroupsArray = [];
+                for (let i = 0; i < result0.recordset.length; i++) {
+                    availableGroupsArray.push(result0.recordset[i].Groups);
+                }
+                ws.send(JSON.stringify(['AvailableGroups', availableGroupsArray]));
+                break;
             case 'RequestForQuestionnaireStudent':
                 const pool1 = yield sql.connect(config);
                 const result1 = yield pool1.request()
                     .query(`
-                        SELECT QuestionnaireName, Groups
+                        SELECT SurveyName
                         FROM Questionnaires
+                        WHERE Groups = 'Все' OR Groups LIKE '%${msg[1]}%'
                     `);
                 pool1.close();
-                let groupsArray = [];
                 const questionnaires1 = [];
                 for (let i = 0; i < result1.recordset.length; i++) {
-                    if (result1.recordset[i].Groups === 'Все') {
-                        questionnaires1.push(result1.recordset[i].QuestionnaireName);
-                    }
-                    else {
-                        groupsArray = JSON.parse(result1.recordset[i].Groups);
-                        if (groupsArray.includes(msg[1])) {
-                            questionnaires1.push(result1.recordset[i].QuestionnaireName);
-                        }
-                    }
+                    questionnaires1.push(result1.recordset[i].SurveyName);
                 }
                 ws.send(JSON.stringify(['AvailableQuestionnaires', questionnaires1]));
                 break;
@@ -54,14 +60,14 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 const pool2 = yield sql.connect(config);
                 const result2 = yield pool2.request()
                     .query(`
-                        SELECT QuestionnaireName
+                        SELECT SurveyName
                         FROM Questionnaires
                         WHERE ProfessorName = '${msg[1]}'
                     `);
                 pool2.close();
                 const questionnaires2 = [];
                 for (let i = 0; i < result2.recordset.length; i++) {
-                    questionnaires2.push(result2.recordset[i].QuestionnaireName);
+                    questionnaires2.push(result2.recordset[i].SurveyName);
                 }
                 ws.send(JSON.stringify(['AvailableQuestionnaires', questionnaires2]));
                 break;
@@ -69,33 +75,45 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 const pool3 = yield sql.connect(config);
                 const result3 = yield pool3.request()
                     .query(`
-                        SELECT Questions, Answers
-                        FROM Questionnaires
-                        WHERE QuestionnaireName = '${msg[1]}'
+                        SELECT QuestionText
+                        FROM SurveyQuestions
+                        WHERE questionnaire_id = (
+                            SELECT id
+                            FROM Questionnaires
+                            WHERE SurveyName = '${msg[1]}'
+                        )
                     `);
                 pool3.close();
                 const questions = [];
-                const answers = [];
                 for (let i = 0; i < result3.recordset.length; i++) {
-                    const arr1 = result3.recordset[i].Questions.split('~');
-                    const arr2 = result3.recordset[i].Answers.split('~');
-                    questions.push(...arr1);
-                    answers.push(...arr2);
+                    questions.push(result3.recordset[i].QuestionText);
                 }
-                ws.send(JSON.stringify(['SendQuestion', questions, answers]));
+                ws.send(JSON.stringify(['SendQuestion', questions]));
                 break;
             case 'SendStudentAnswer':
                 const pool4 = yield sql.connect(config);
                 const data4 = {
-                    QuestionnaireName: msg[3],
-                    GroupNumber: msg[2],
-                    Answers: JSON.stringify(msg[1]),
+                    questionnaire_id: (yield pool4.request()
+                        .query(`
+                                SELECT id
+                                FROM Questionnaires
+                                WHERE SurveyName = '${msg[3]}'
+                            `)).recordset[0].id,
+                    group_id: (yield pool4.request()
+                        .query(`
+                                SELECT id
+                                FROM AvailableGroups
+                                WHERE Groups LIKE '%${msg[2]}%'
+                            `)).recordset[0].id,
+                    question_id: msg[4],
+                    answer_id: msg[5],
+                    answers_json: JSON.stringify(msg[1])
                 };
                 const result4 = yield pool4.request()
                     .query `
                     INSERT INTO Answers
-                        (QuestionnaireName, GroupNumber, Answers)
-                    VALUES (@QuestionnaireName, @GroupNumber, @Answers)
+                        (questionnaire_id, group_id, question_id, answer_id, answers_json)
+                    VALUES (@questionnaire_id, @group_id, @question_id, @answer_id, @answers_json)
                 `;
                 pool4.close();
                 if (result4.rowsAffected[0] === 1) {
@@ -108,17 +126,15 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
             case 'ReceiveProfessorQuestionnaire':
                 const pool5 = yield sql.connect(config);
                 const data5 = {
-                    QuestionnaireName: msg[1],
+                    SurveyName: msg[1],
                     Questions: msg[2],
-                    Answers: msg[3],
-                    Groups: msg[4],
-                    ProfessorName: msg[5],
+                    ProfessorName: msg[5]
                 };
                 const result5 = yield pool5.request()
                     .query `
-                    INSERT INTO Questionnairesdata
-                        (QuestionnaireName, Questions, Answers, Groups, ProfessorName)
-                    VALUES (@QuestionnaireName, @Questions, @Answers, @Groups, @ProfessorName)
+                    INSERT INTO Questionnaires
+                        (SurveyName, Questions, ProfessorName)
+                    VALUES (@SurveyName, @Questions, @ProfessorName)
                 `;
                 pool5.close();
                 if (result5.rowsAffected[0] === 1) {

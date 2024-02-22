@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import React, { FC } from 'react';
 
+
 interface FormProps {
     create: () => void;
 }
@@ -8,12 +9,13 @@ interface FormProps {
 const QuestionnaireForm: FC<FormProps> = ({ create }) => {
     const addNewForm = (e: any) => {
         e.preventDefault();
+
         create();
     };
 
     return (
-        <form>
-            <Button onClick={addNewForm}>Создать пост</Button>
+        <form style={{display:"flex", justifyContent:"center"}}>
+            <Button onClick={addNewForm}  color="secondary">Начать создание</Button>
         </form>
     );
 };

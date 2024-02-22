@@ -8,15 +8,34 @@
     background: rgba(0,0,0,0.5);
 }
 
-.myModalContent{
-    padding: 25px;
-    background: darkgoldenrod;
-    border-radius: 16px;
-    min-width: 250px;
-}
-
 .myModal.active{
     display: flex;
     justify-content: center;
     align-items: center;
+
+}
+
+
+
+.myModalContent{
+    padding: 25px;
+    background: white;
+    min-width: 400px;
+    border: 2px solid black;
+
+}
+
+.numberOfQuestion{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+
+.checkBox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
 }

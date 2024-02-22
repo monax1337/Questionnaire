@@ -22,7 +22,7 @@ const CreateQuestionnaires = () => {
             <MyAppBar navItems={['Выйти']} />
             <div className="mainContent">
                 <div className="quesionContent">
-                    <Button variant="outlined">
+                    <Button variant="outlined" >
                         Primary
                     </Button>
                 </div>

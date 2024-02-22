@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import Button from "@mui/material/Button";
-import MyModal from "../Components/UI/MyModal/MyModal";
-import QuestionnaireForm from "../Components/QuestionnaireForm";
+import MyModal from "../Components/UI/Modals/MyModal";
+
 
 const CreateQuestionnaires = () => {
     const [modal, setModal] = useState(true);
@@ -15,9 +15,8 @@ const CreateQuestionnaires = () => {
 
     return (
         <div>
-            <MyModal visible={modal} setVisible={setModal}>
-                <QuestionnaireForm create={createQuestionnaire} />
-            </MyModal>
+            <MyModal visible={modal} setVisible={setModal} create={createQuestionnaire}/>
+
 
             <MyAppBar navItems={['Выйти']} />
             <div className="mainContent">

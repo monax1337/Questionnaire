@@ -7,22 +7,20 @@ import QuestionnaireForm from "../Components/QuestionnaireForm";
 const CreateQuestionnaires = () => {
     const [modal, setModal] = useState(true);
 
-    // Call createQuestionnaire and close modal after creating
-
-    const createQuestionnaire =() => {
+    const createQuestionnaire = () => {
         setModal(false);
     };
 
     return (
         <div>
-            <MyModal visible={modal} setVisible={setModal}>
+            <MyModal visible={modal} setVisible={setModal} create={createQuestionnaire}>
                 <QuestionnaireForm create={createQuestionnaire} />
             </MyModal>
 
             <MyAppBar navItems={['Выйти']} />
             <div className="mainContent">
                 <div className="quesionContent">
-                    <Button variant="outlined" >
+                    <Button variant="outlined">
                         Primary
                     </Button>
                 </div>

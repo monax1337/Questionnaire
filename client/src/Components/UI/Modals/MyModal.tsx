@@ -8,15 +8,16 @@ import Button from "@mui/material/Button";
 interface IMyModalProps {
     visible: boolean;
     setVisible(visible: boolean): void;
-    create: () => void; // Добавляем проп create для передачи функции из QuestionnaireForm
+    create: (value: string, p: string[])  => void; // Добавляем проп create для передачи функции из QuestionnaireForm
 }
 
 const MyModal: FC<IMyModalProps> = ({ visible, setVisible, create }) => {
     const rootClasses = ['myModal'];
     const [checked, setChecked] = useState(true);
     const [showAnswer, setShowAnswer] = useState(false);
-    const [fields, setFields] = useState<string[]>(['']); // Значения текстовых полей
-    const [isFieldEmpty, setIsFieldEmpty] = useState<boolean[]>([true]); // Состояние пустоты полей
+    const [fields, setFields] = useState<string[]>(['','']); // Значения текстовых полей
+    const [isFieldEmpty, setIsFieldEmpty] = useState<boolean[]>([true, true]); // Состояние пустоты полей
+    const [numberOfQuestions,setNumberOfQuestions]=useState('')
 
     useEffect(() => {
         setChecked(false);
@@ -45,9 +46,22 @@ const MyModal: FC<IMyModalProps> = ({ visible, setVisible, create }) => {
         setFields(prevFields => [...prevFields, '']);
         setIsFieldEmpty(prevIsFieldEmpty => [...prevIsFieldEmpty, true]);
     };
+    const numberOfQuestionsChange=(value: string) =>{
+        setNumberOfQuestions(value);
+    }
+    const createForm=() =>{
+        if(numberOfQuestions!='') {
+            if (showAnswer) {
 
+                create(numberOfQuestions,fields)
+            } else {
+                create(numberOfQuestions,[''])
+            }
+        }
+
+    }
     const deleteAnswer = (indexToDelete: number) => {
-        if (fields.length > 1) {
+        if (fields.length > 2) {
             setFields(prevFields => prevFields.filter((_, index) => index !== indexToDelete));
             setIsFieldEmpty(prevIsFieldEmpty => prevIsFieldEmpty.filter((_, index) => index !== indexToDelete));
         }
@@ -66,6 +80,7 @@ const MyModal: FC<IMyModalProps> = ({ visible, setVisible, create }) => {
                             shrink: true,
                         }}
                         variant="standard"
+                        onChange={(e) => numberOfQuestionsChange( e.target.value)}
                     />
                 </div>
 
@@ -89,7 +104,8 @@ const MyModal: FC<IMyModalProps> = ({ visible, setVisible, create }) => {
                                     onChange={(e) => handleFieldChange(index, e.target.value)}
                                     value={value}
                                 />
-                                <IconButton aria-label="delete" onClick={() => deleteAnswer(index)} disabled={fields.length === 1}>
+
+                                <IconButton aria-label="delete" onClick={() => deleteAnswer(index)} disabled={fields.length === 2}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
@@ -98,7 +114,7 @@ const MyModal: FC<IMyModalProps> = ({ visible, setVisible, create }) => {
                     </div>
                 )}
                 <div style={{display:"flex", alignItems: "center",justifyContent: "center"}}>
-                    <Button onClick={create}  color="secondary" disabled={showAnswer && isFieldEmpty.some(isEmpty => isEmpty)} >Начать создание</Button>
+                    <Button onClick={createForm}  color="secondary" disabled={showAnswer && isFieldEmpty.some(isEmpty => isEmpty)} >Начать создание</Button>
                 </div>
             </div>
         </div>

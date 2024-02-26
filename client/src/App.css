@@ -25,3 +25,10 @@
     border-right: 1px solid;
     border-left: 1px solid;
 }
+
+.question{
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid;
+}

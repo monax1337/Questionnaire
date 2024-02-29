@@ -4,6 +4,7 @@ import MyModal from "../Components/UI/Modals/MyModal";
 import { TextField, Button, IconButton, Select, MenuItem, FormControl, InputLabel, Checkbox, ListItemText } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SelectChangeEvent } from '@mui/material';
+import {useWebSocket} from "../Contexts/WebSocketContext";
 
 const CreateQuestionnaires = () => {
     const [modal, setModal] = useState(true);
@@ -11,7 +12,7 @@ const CreateQuestionnaires = () => {
     const [formName, setFormName] = useState('');
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
-
+    const {socket} = useWebSocket();
     // Функция для открытия/закрытия модального окна
     const toggleModal = () => {
         setModal(prevModal => !prevModal);
@@ -88,9 +89,24 @@ const CreateQuestionnaires = () => {
         setGroups(e.target.value as string[] || []);
     };
 
-    const addQuestionnaire=() =>{
-        
-    }
+    const sendQuestionnaireData = (data:any) => {
+        if(socket)
+            socket.send(JSON.stringify(["ReceiveProfessorQuestionnaire",data]));
+    };
+
+    // Функция для добавления анкеты
+    const addQuestionnaire = () => {
+        // Собираем данные для отправки на сервер
+        const data = {
+            formName: formName,
+            faculty: faculty,
+            groups: groups,
+            questionnaire: questionnaire
+        };
+
+        // Отправляем данные на сервер через WebSocket
+        sendQuestionnaireData(data);
+    };
     return (
         <div>
             <MyAppBar navItems={['Выйти']} />

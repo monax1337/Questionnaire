@@ -124,25 +124,30 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 break;
             case 'ReceiveProfessorQuestionnaire':
-                const pool5 = yield sql.connect(config);
-                const data5 = {
-                    SurveyName: msg[1],
-                    Questions: msg[2],
-                    ProfessorName: msg[5]
-                };
-                const result5 = yield pool5.request()
-                    .query `
-                    INSERT INTO Questionnaires
-                        (SurveyName, Questions, ProfessorName)
-                    VALUES (@SurveyName, @Questions, @ProfessorName)
-                `;
-                pool5.close();
-                if (result5.rowsAffected[0] === 1) {
-                    ws.send(JSON.stringify(['Success']));
-                }
-                else {
-                    ws.send(JSON.stringify(['Error', 'Ошибка отправки анкеты']));
-                }
+                console.log("suc");
+                console.log(msg[0]);
+                console.log(msg[1]);
+                // const pool5 = await sql.connect(config);
+                //
+                // const data5 = {
+                //     SurveyName: msg[1],
+                //     Questions: msg[2],
+                //     ProfessorName: msg[5]
+                // };
+                // const result5 = await pool5.request()
+                //     .query`
+                //     INSERT INTO Questionnaires
+                //         (SurveyName, Questions, ProfessorName)
+                //     VALUES (@SurveyName, @Questions, @ProfessorName)
+                // `;
+                //
+                // pool5.close();
+                //
+                // if (result5.rowsAffected[0] === 1) {
+                //     ws.send(JSON.stringify(['Success']));
+                // } else {
+                //     ws.send(JSON.stringify(['Error', 'Ошибка отправки анкеты']));
+                // }
                 break;
             case 'Register':
                 const pool6 = yield sql.connect(config);

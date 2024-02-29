@@ -158,28 +158,51 @@ server.on('connection', async (ws: WebSocket) => {
                 break;
 
             case 'ReceiveProfessorQuestionnaire':
-
+                console.log(msg[1])
                 const pool5 = await sql.connect(config);
 
-                const data5 = {
-                    SurveyName: msg[1],
-                    Questions: msg[2],
-                    ProfessorName: msg[5]
-                };
+                const data5 = msg[1]; // Полученные данные об анкете
+                const { formName, faculty, groups, questionnaire } = data5;
+
+                // Вставка данных анкеты в таблицу Questionnaires
                 const result5 = await pool5.request()
                     .query`
-                    INSERT INTO Questionnaires
-                        (SurveyName, Questions, ProfessorName)
-                    VALUES (@SurveyName, @Questions, @ProfessorName)
-                `;
-
-                pool5.close();
+        INSERT INTO Questionnaires
+            (SurveyName, Groups, ProfessorName)
+        VALUES (${formName}, ${groups.join(',')}, 'Admin')
+    `;
 
                 if (result5.rowsAffected[0] === 1) {
+                    // Если вставка прошла успешно, продолжайте с вставкой вопросов анкеты и их вариантов ответов
+                    const questionnaireId = result5.recordset[0].id;
+
+                    // Вставка вопросов анкеты в таблицу SurveyQuestions
+                    for (const questionData of questionnaire) {
+                        const questionResult = await pool5.request()
+                            .query`
+                INSERT INTO SurveyQuestions
+                    (questionnaire_id, QuestionText)
+                VALUES (${questionnaireId}, ${questionData.question})
+            `;
+                        const questionId = questionResult.recordset[0].id;
+
+                        // Вставка вариантов ответов на вопрос в таблицу AnswerOptions
+                        for (const answer of questionData.answers) {
+                            await pool5.request()
+                                .query`
+                    INSERT INTO AnswerOptions
+                        (question_id, OptionText)
+                    VALUES (${questionId}, ${answer})
+                `;
+                        }
+                    }
+
                     ws.send(JSON.stringify(['Success']));
                 } else {
                     ws.send(JSON.stringify(['Error', 'Ошибка отправки анкеты']));
                 }
+
+                pool5.close();
 
                 break;
 

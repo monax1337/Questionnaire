@@ -107,6 +107,14 @@ const CreateQuestionnaires = () => {
         // Отправляем данные на сервер через WebSocket
         sendQuestionnaireData(data);
     };
+    const deleteQuestion = (questionIndex: number) => {
+        setQuestionnaire(prevQuestionnaire => {
+            const newQuestionnaire = [...prevQuestionnaire];
+            newQuestionnaire.splice(questionIndex, 1);
+            return newQuestionnaire;
+        });
+    };
+
     return (
         <div>
             <MyAppBar navItems={['Выйти']} />
@@ -114,84 +122,95 @@ const CreateQuestionnaires = () => {
 
 
 
-            <div className="mainContent">
+            <div className="allContent">
                 {!modal && (
-                    <div className="questionContent">
-                        <TextField
-                            label="Название анкеты"
-                            value={formName}
-                            onChange={handleFormNameChange}
+                    <div className="mainContent">
+                        <div className="formControl">
+                            <TextField
+                                label="Название анкеты"
+                                value={formName}
+                                onChange={handleFormNameChange}
+                                sx={{ marginLeft: '5px'}}
+                            />
+                            <FormControl  required style={{ maxWidth: '300px',minWidth: '300px', marginTop:'10px', marginLeft:'5px' }}>
+                                <InputLabel id="faculty-select-label">Факультет</InputLabel>
+                                <Select
+                                    labelId="faculty-select-label"
+                                    id="faculty-select"
+                                    value={faculty}
+                                    onChange={handleFacultyChange}
+                                    style={{ width: '100%' }}
+                                >
+                                    <MenuItem value="faculty1">Факультет 1</MenuItem>
+                                    <MenuItem value="faculty2">Факультет 2</MenuItem>
+                                    <MenuItem value="faculty3">Факультет 3</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl required style={{  maxWidth: '300px',minWidth: '300px', marginTop:'10px', marginLeft:'5px' }}>
+                                <InputLabel id="groups-select-label">Группы</InputLabel>
+                                <Select
+                                    labelId="groups-select-label"
+                                    id="groups-select"
+                                    multiple
+                                    value={groups}
+                                    onChange={handleGroupsChange}
+                                    style={{ width: '100%' }}
+                                    renderValue={(selected) => (selected as string[]).join(', ')}
+                                >
+                                    <MenuItem value="group1">Группа 1</MenuItem>
+                                    <MenuItem value="group2">Группа 2</MenuItem>
+                                    <MenuItem value="group3">Группа 3</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="questionContent">
+                            {questionnaire.map((questionData, questionIndex) => (
+                                <div className="question" key={questionIndex}>
+                                    <TextField
+                                        id={`question-${questionIndex}`}
+                                        label={`Вопрос ${questionIndex + 1}`}
+                                        variant="standard"
+                                        value={questionData.question}
+                                        onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
+                                    />
 
-                        />
-                        <FormControl  style={{ width: '100%', maxWidth: '300px' }}>
-                            <InputLabel id="faculty-select-label">Факультет</InputLabel>
-                            <Select
-                                labelId="faculty-select-label"
-                                id="faculty-select"
-                                value={faculty}
-                                onChange={handleFacultyChange}
-                                style={{ width: '100%' }}
-                            >
-                                <MenuItem value="faculty1">Факультет 1</MenuItem>
-                                <MenuItem value="faculty2">Факультет 2</MenuItem>
-                                <MenuItem value="faculty3">Факультет 3</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl  style={{ width: '100%', maxWidth: '300px' }}>
-                            <InputLabel id="groups-select-label">Группы</InputLabel>
-                            <Select
-                                labelId="groups-select-label"
-                                id="groups-select"
-                                multiple
-                                value={groups}
-                                onChange={handleGroupsChange}
-                                style={{ width: '100%' }}
-                                renderValue={(selected) => (selected as string[]).join(', ')}
-                            >
-                                <MenuItem value="group1">Группа 1</MenuItem>
-                                <MenuItem value="group2">Группа 2</MenuItem>
-                                <MenuItem value="group3">Группа 3</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {questionnaire.map((questionData, questionIndex) => (
-                            <div className="question" key={questionIndex}>
+                                    <IconButton
+                                        aria-label="delete question"
+                                        onClick={() => deleteQuestion(questionIndex)}
+                                        style={{  }}     //ПЛОХОЕ РЕШЕНИЕ НУЖНО ДОДЕЛАТЬ
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
 
-                                <TextField
-                                    id={`question-${questionIndex}`}
-                                    label={`Вопрос ${questionIndex + 1}`}
-                                    variant="standard"
-                                    value={questionData.question}
-                                    onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
-                                />
+                                    {questionData.answers.map((answer, answerIndex) => (
+                                        <div className="field" key={answerIndex}>
 
-                                {questionData.answers.map((answer, answerIndex) => (
-                                    <div className="field" key={answerIndex}>
+                                            <TextField
+                                                id={`answer-${questionIndex}-${answerIndex}`}
+                                                label={`Ответ ${answerIndex + 1}`}
+                                                variant="standard"
+                                                value={answer}
+                                                onChange={(e) => handleAnswerChange(questionIndex, answerIndex, e.target.value)}
+                                            />
 
-                                        <TextField
-                                            id={`answer-${questionIndex}-${answerIndex}`}
-                                            label={`Ответ ${answerIndex + 1}`}
-                                            variant="standard"
-                                            value={answer}
-                                            onChange={(e) => handleAnswerChange(questionIndex, answerIndex, e.target.value)}
-                                        />
+                                            <IconButton aria-label="delete"
+                                                        onClick={() => deleteAnswer(questionIndex, answerIndex)}
+                                                        disabled={questionData.answers.length <= 2}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                        </div>
+                                    ))}
 
-                                        <IconButton aria-label="delete"
-                                                    onClick={() => deleteAnswer(questionIndex, answerIndex)}
-                                                    disabled={questionData.answers.length <= 2}>
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                    </div>
-                                ))}
-
-                                <Button color="secondary" onClick={() => addAnswer(questionIndex)}>Добавить
-                                    ответ</Button>
-                            </div>
-                        ))}
+                                    <Button color="secondary" onClick={() => addAnswer(questionIndex)}>Добавить
+                                        ответ</Button>
+                                </div>
+                            ))}
+                        </div>
                         <div className="addQuestionButton">
                             <Button variant="contained" onClick={addQuestion}>Добавить вопрос</Button>
                         </div>
                         <div className="endOfCreate">
-                            <Button variant="contained" color="primary" onClick={addQuestionnaire}>Создать</Button>
+                            <Button variant="contained" color="secondary" onClick={addQuestionnaire}>Создать</Button>
                         </div>
                     </div>
 

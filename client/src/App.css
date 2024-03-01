@@ -16,19 +16,42 @@
     margin-right: 10px;
 }
 
-.mainContent{
+.allContent{
     margin:auto;
     width: 50%;
-    height: 100vh;
+    min-height:100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     border-right: 1px solid;
     border-left: 1px solid;
 }
-
+.formControl{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch
+}
+.questionContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .question{
     width: 100%;
     margin-top: 10px;
     padding: 5px;
-    border: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+
+}
+
+.addQuestionButton{
+    margin-top:10px;
+    display: flex;
+    justify-content: center;
+}
+.endOfCreate{
+    margin-top:20px;
+    display: flex;
+    justify-content: center;
 }

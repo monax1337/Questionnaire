@@ -124,30 +124,58 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 break;
             case 'ReceiveProfessorQuestionnaire':
-                console.log("suc");
-                console.log(msg[0]);
-                console.log(msg[1]);
-                // const pool5 = await sql.connect(config);
-                //
-                // const data5 = {
-                //     SurveyName: msg[1],
-                //     Questions: msg[2],
-                //     ProfessorName: msg[5]
-                // };
-                // const result5 = await pool5.request()
-                //     .query`
-                //     INSERT INTO Questionnaires
-                //         (SurveyName, Questions, ProfessorName)
-                //     VALUES (@SurveyName, @Questions, @ProfessorName)
-                // `;
-                //
-                // pool5.close();
-                //
-                // if (result5.rowsAffected[0] === 1) {
-                //     ws.send(JSON.stringify(['Success']));
-                // } else {
-                //     ws.send(JSON.stringify(['Error', 'Ошибка отправки анкеты']));
-                // }
+                const formName = msg[1].formName;
+                const faculty = msg[1].faculty;
+                const groups = msg[1].groups;
+                const questionnaire = msg[1].questionnaire;
+                // Вставка информации о форме анкеты в таблицу Questionnaires
+                const poolInsert = yield sql.connect(config);
+                const insertQuery = `
+        INSERT INTO Questionnaires (SurveyName, Groups, ProfessorName, Faculty)
+        VALUES ('${formName}', '${JSON.stringify(groups)}', 'Admin', '${faculty}')
+    `;
+                yield poolInsert.request().query(insertQuery);
+                poolInsert.close();
+                // Получение идентификатора вставленной анкеты
+                const poolId = yield sql.connect(config);
+                const idQuery = `
+        SELECT id
+        FROM Questionnaires
+        WHERE SurveyName = '${formName}'
+    `;
+                const resultId = yield poolId.request().query(idQuery);
+                const questionnaireId = resultId.recordset[0].id;
+                poolId.close();
+                // Вставка вопросов анкеты в таблицу SurveyQuestions
+                for (const question of questionnaire) {
+                    const insertQuestionQuery = `
+            INSERT INTO SurveyQuestions (questionnaire_id, QuestionText)
+            VALUES (${questionnaireId}, '${question.question}')
+        `;
+                    const poolQuestion = yield sql.connect(config);
+                    yield poolQuestion.request().query(insertQuestionQuery);
+                    poolQuestion.close();
+                    // Получение идентификатора вставленного вопроса
+                    const poolQuestionId = yield sql.connect(config);
+                    const questionIdQuery = `
+            SELECT id
+            FROM SurveyQuestions
+            WHERE questionnaire_id = ${questionnaireId} AND QuestionText = '${question.question}'
+        `;
+                    const resultQuestionId = yield poolQuestionId.request().query(questionIdQuery);
+                    const questionId = resultQuestionId.recordset[0].id;
+                    poolQuestionId.close();
+                    // Вставка вариантов ответов в таблицу AnswerOptions
+                    for (const answer of question.answers) {
+                        const insertAnswerQuery = `
+                INSERT INTO AnswerOptions (question_id, OptionText)
+                VALUES (${questionId}, '${answer}')
+            `;
+                        const poolAnswer = yield sql.connect(config);
+                        yield poolAnswer.request().query(insertAnswerQuery);
+                        poolAnswer.close();
+                    }
+                }
                 break;
             case 'Register':
                 const pool6 = yield sql.connect(config);

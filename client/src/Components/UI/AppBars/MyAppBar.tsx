@@ -45,7 +45,7 @@ export default function MyAppBar({window, navItems}: Props) {
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
-            <AppBar position="static" component="nav">
+            <AppBar position="static" component="nav" color="primary">
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -56,7 +56,7 @@ export default function MyAppBar({window, navItems}: Props) {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Box sx={{display: {xs: 'none', sm: 'block'}}}>
+                    <Box sx={{display: 'flex', flexGrow: 1, justifyContent: 'space-between'}}>
                         {navItems.map((item) => (
                             <Button key={item} sx={{color: '#fff'}}>
                                 {item}

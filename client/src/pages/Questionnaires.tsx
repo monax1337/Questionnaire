@@ -14,7 +14,7 @@
     const Questionnaires = () => {
         const [availableQuestionnaires, setAvailableQuestionnaires] = useState<string[]>([]);
         const {socket} = useWebSocket();
-        let enteredQuestionnaire = "10701321";
+        let enteredQuestionnaire = ["group1"];
 
         useEffect(() => {
             if (socket) {

@@ -31,15 +31,17 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 const pool0 = yield sql.connect(config);
                 const result0 = yield pool0.request()
                     .query(`
-                        SELECT *
-                        FROM AvailableGroups
-                    `);
+                SELECT DISTINCT Faculty, Groups
+                FROM AvailableGroups
+            `);
                 pool0.close();
-                let availableGroupsArray = [];
+                let availableGroupsObject = {};
                 for (let i = 0; i < result0.recordset.length; i++) {
-                    availableGroupsArray.push(result0.recordset[i].Groups);
+                    const faculty = result0.recordset[i].Faculty;
+                    const groups = JSON.parse(result0.recordset[i].Groups);
+                    availableGroupsObject[faculty] = groups;
                 }
-                ws.send(JSON.stringify(['AvailableGroups', availableGroupsArray]));
+                ws.send(JSON.stringify(['AvailableGroups', availableGroupsObject]));
                 break;
             case 'RequestForQuestionnaireStudent':
                 const pool1 = yield sql.connect(config);

@@ -10,48 +10,55 @@
     min-height: 100vh;
 }
 
-.controlPanel{
+.controlPanel {
     display: flex;
     justify-content: center;
     margin-right: 10px;
 }
 
-.allContent{
-    margin:auto;
+.allContent {
+    margin: auto;
     width: 50%;
-    min-height:100vh;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     border-right: 1px solid;
     border-left: 1px solid;
 }
-.formControl{
+
+.formControl {
     display: flex;
     flex-direction: column;
     align-items: stretch
 }
-.questionContent{
+
+.questionContent {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.question{
+
+.question {
     width: 100%;
     margin-top: 10px;
     padding: 5px;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    border: 2px solid;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
 
 }
 
-.addQuestionButton{
-    margin-top:10px;
+.addQuestionButton {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
 }
-.endOfCreate{
-    margin-top:20px;
+
+.endOfCreate {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
 }

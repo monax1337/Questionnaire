@@ -27,18 +27,20 @@ server.on('connection', async (ws: WebSocket) => {
 
                 const result0 = await pool0.request()
                     .query(`
-                        SELECT *
-                        FROM AvailableGroups
-                    `);
+                SELECT DISTINCT Faculty, Groups
+                FROM AvailableGroups
+            `);
 
                 pool0.close();
 
-                let availableGroupsArray: string[] = [];
+                let availableGroupsObject:any = {};
                 for (let i = 0; i < result0.recordset.length; i++) {
-                    availableGroupsArray.push(result0.recordset[i].Groups);
+                    const faculty = result0.recordset[i].Faculty;
+                    const groups = JSON.parse(result0.recordset[i].Groups);
+                    availableGroupsObject[faculty] = groups;
                 }
 
-                ws.send(JSON.stringify(['AvailableGroups', availableGroupsArray]));
+                ws.send(JSON.stringify(['AvailableGroups', availableGroupsObject]));
                 break;
 
             case 'RequestForQuestionnaireStudent':

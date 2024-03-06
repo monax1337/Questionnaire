@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import MyModal from "../Components/UI/Modals/MyModal";
 import { TextField, Button, IconButton, Select, MenuItem, FormControl, InputLabel, Checkbox, ListItemText } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { SelectChangeEvent } from '@mui/material';
 import {useWebSocket} from "../Contexts/WebSocketContext";
 
@@ -13,6 +14,9 @@ const CreateQuestionnaires = () => {
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
     const {socket} = useWebSocket();
+    const [availableFaculties, setAvailableFaculties] = useState<string[]>([]);
+    const [availableGroups, setAvailableGroups] = useState<{ [key: string]: string[] }>({});
+
     // Функция для открытия/закрытия модального окна
     const toggleModal = () => {
         setModal(prevModal => !prevModal);
@@ -77,6 +81,33 @@ const CreateQuestionnaires = () => {
         // Сохраняем опросник
     };
 
+
+
+    useEffect(() => {
+        if (socket) {
+            socket.onopen = () => {
+                socket.send(JSON.stringify(["RequestForAvailableGroups"]))
+            };
+            socket.onmessage = (event) => {
+                console.log('Received message:', event.data);
+                const [type, data] = JSON.parse(event.data);
+                console.log("Data:", data); // Вывести весь объект data
+                if (type === "AvailableGroups" && data) {
+                    // Итерируемся по ключам объекта data
+                    const faculties = Object.keys(data);
+                    setAvailableFaculties(faculties); // Обновляем список факультетов
+
+                    const allGroups = Object.entries(data).reduce((acc, [faculty, groups]) => {
+                        acc[faculty]  = groups as string[];
+                        return acc;
+                    }, {} as { [key: string]: string[] });
+                    setAvailableGroups(allGroups);
+
+                }
+            };
+        }
+    }, [socket]);
+
     const handleFormNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormName(e.target.value);
     };
@@ -88,6 +119,7 @@ const CreateQuestionnaires = () => {
     const handleGroupsChange = (e: SelectChangeEvent<string | string[]>) => {
         setGroups(e.target.value as string[] || []);
     };
+
 
     const sendQuestionnaireData = (data:any) => {
         if(socket)
@@ -117,10 +149,8 @@ const CreateQuestionnaires = () => {
 
     return (
         <div>
-            <MyAppBar navItems={['Выйти']} />
-            <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire} />
-
-
+            <MyAppBar navItems={['Выйти']}/>
+            <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire}/>
 
             <div className="allContent">
                 {!modal && (
@@ -130,23 +160,33 @@ const CreateQuestionnaires = () => {
                                 label="Название анкеты"
                                 value={formName}
                                 onChange={handleFormNameChange}
-                                sx={{ marginLeft: '5px'}}
+                                sx={{marginLeft: '5px'}}
                             />
-                            <FormControl  required style={{ maxWidth: '300px',minWidth: '300px', marginTop:'10px', marginLeft:'5px' }}>
+                            <FormControl required style={{
+                                maxWidth: '300px',
+                                minWidth: '300px',
+                                marginTop: '10px',
+                                marginLeft: '5px'
+                            }}>
                                 <InputLabel id="faculty-select-label">Факультет</InputLabel>
                                 <Select
                                     labelId="faculty-select-label"
                                     id="faculty-select"
                                     value={faculty}
                                     onChange={handleFacultyChange}
-                                    style={{ width: '100%' }}
+                                    style={{width: '100%'}}
                                 >
-                                    <MenuItem value="faculty1">Факультет 1</MenuItem>
-                                    <MenuItem value="faculty2">Факультет 2</MenuItem>
-                                    <MenuItem value="faculty3">Факультет 3</MenuItem>
+                                    {availableFaculties.map((facultyName, index) => (
+                                        <MenuItem key={index} value={facultyName}>{facultyName}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
-                            <FormControl required style={{  maxWidth: '300px',minWidth: '300px', marginTop:'10px', marginLeft:'5px' }}>
+                            <FormControl required style={{
+                                maxWidth: '300px',
+                                minWidth: '300px',
+                                marginTop: '10px',
+                                marginLeft: '5px'
+                            }}>
                                 <InputLabel id="groups-select-label">Группы</InputLabel>
                                 <Select
                                     labelId="groups-select-label"
@@ -154,34 +194,35 @@ const CreateQuestionnaires = () => {
                                     multiple
                                     value={groups}
                                     onChange={handleGroupsChange}
-                                    style={{ width: '100%' }}
+                                    style={{width: '100%'}}
                                     renderValue={(selected) => (selected as string[]).join(', ')}
                                 >
-                                    <MenuItem value="group1">Группа 1</MenuItem>
-                                    <MenuItem value="group2">Группа 2</MenuItem>
-                                    <MenuItem value="group3">Группа 3</MenuItem>
+                                    {faculty && availableGroups[faculty] && availableGroups[faculty].map((groupName, index) => (
+                                        <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </div>
                         <div className="questionContent">
                             {questionnaire.map((questionData, questionIndex) => (
                                 <div className="question" key={questionIndex}>
-                                    <TextField
-                                        id={`question-${questionIndex}`}
-                                        label={`Вопрос ${questionIndex + 1}`}
-                                        variant="standard"
-                                        value={questionData.question}
-                                        onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
-                                    />
+                                    <div>
+                                        <TextField
+                                            id={`question-${questionIndex}`}
+                                            label={`Вопрос ${questionIndex + 1}`}
+                                            variant="standard"
+                                            value={questionData.question}
+                                            onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
+                                        />
 
-                                    <IconButton
-                                        aria-label="delete question"
-                                        onClick={() => deleteQuestion(questionIndex)}
-                                        style={{  }}     //ПЛОХОЕ РЕШЕНИЕ НУЖНО ДОДЕЛАТЬ
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-
+                                        <IconButton
+                                            aria-label="delete question"
+                                            onClick={() => deleteQuestion(questionIndex)}
+                                            style={{  }}
+                                        >
+                                            <DeleteOutlinedIcon />
+                                        </IconButton>
+                                    </div>
                                     {questionData.answers.map((answer, answerIndex) => (
                                         <div className="field" key={answerIndex}>
 
@@ -200,8 +241,7 @@ const CreateQuestionnaires = () => {
                                             </IconButton>
                                         </div>
                                     ))}
-
-                                    <Button color="secondary" onClick={() => addAnswer(questionIndex)}>Добавить
+                                    <Button sx={{marginTop:'15px'}}color="secondary" onClick={() => addAnswer(questionIndex)}>Добавить
                                         ответ</Button>
                                 </div>
                             ))}
@@ -210,13 +250,11 @@ const CreateQuestionnaires = () => {
                             <Button variant="contained" onClick={addQuestion}>Добавить вопрос</Button>
                         </div>
                         <div className="endOfCreate">
-                            <Button variant="contained" color="secondary" onClick={addQuestionnaire}>Создать</Button>
+                            <Button  variant="contained" color="secondary" onClick={addQuestionnaire}>Создать</Button>
                         </div>
                     </div>
-
                 )}
             </div>
-
         </div>
     );
 };

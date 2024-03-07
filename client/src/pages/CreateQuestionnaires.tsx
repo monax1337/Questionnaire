@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { SelectChangeEvent } from '@mui/material';
 import {useWebSocket} from "../Contexts/WebSocketContext";
+import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 
 const CreateQuestionnaires = () => {
     const [modal, setModal] = useState(true);
@@ -14,8 +15,7 @@ const CreateQuestionnaires = () => {
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
     const {socket} = useWebSocket();
-    const [availableFaculties, setAvailableFaculties] = useState<string[]>([]);
-    const [availableGroups, setAvailableGroups] = useState<{ [key: string]: string[] }>({});
+
 
     // Функция для открытия/закрытия модального окна
     const toggleModal = () => {
@@ -83,42 +83,13 @@ const CreateQuestionnaires = () => {
 
 
 
-    useEffect(() => {
-        if (socket) {
-            socket.onopen = () => {
-                socket.send(JSON.stringify(["RequestForAvailableGroups"]))
-            };
-            socket.onmessage = (event) => {
-                console.log('Received message:', event.data);
-                const [type, data] = JSON.parse(event.data);
-                console.log("Data:", data); // Вывести весь объект data
-                if (type === "AvailableGroups" && data) {
-                    // Итерируемся по ключам объекта data
-                    const faculties = Object.keys(data);
-                    setAvailableFaculties(faculties); // Обновляем список факультетов
 
-                    const allGroups = Object.entries(data).reduce((acc, [faculty, groups]) => {
-                        acc[faculty]  = groups as string[];
-                        return acc;
-                    }, {} as { [key: string]: string[] });
-                    setAvailableGroups(allGroups);
-
-                }
-            };
-        }
-    }, [socket]);
 
     const handleFormNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormName(e.target.value);
     };
 
-    const handleFacultyChange = (e: SelectChangeEvent<string>) => {
-        setFaculty(e.target.value);
-    };
 
-    const handleGroupsChange = (e: SelectChangeEvent<string | string[]>) => {
-        setGroups(e.target.value as string[] || []);
-    };
 
 
     const sendQuestionnaireData = (data:any) => {
@@ -146,6 +117,13 @@ const CreateQuestionnaires = () => {
             return newQuestionnaire;
         });
     };
+    const handleDataFromChild = (data:any) => {
+        setFaculty(data[0]);
+        setGroups(data[1]);
+        console.log(data)
+        console.log(data[0])
+        console.log(data[1])
+    };
 
     return (
         <div>
@@ -162,46 +140,7 @@ const CreateQuestionnaires = () => {
                                 onChange={handleFormNameChange}
                                 sx={{marginLeft: '5px'}}
                             />
-                            <FormControl required style={{
-                                maxWidth: '300px',
-                                minWidth: '300px',
-                                marginTop: '10px',
-                                marginLeft: '5px'
-                            }}>
-                                <InputLabel id="faculty-select-label">Факультет</InputLabel>
-                                <Select
-                                    labelId="faculty-select-label"
-                                    id="faculty-select"
-                                    value={faculty}
-                                    onChange={handleFacultyChange}
-                                    style={{width: '100%'}}
-                                >
-                                    {availableFaculties.map((facultyName, index) => (
-                                        <MenuItem key={index} value={facultyName}>{facultyName}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl required style={{
-                                maxWidth: '300px',
-                                minWidth: '300px',
-                                marginTop: '10px',
-                                marginLeft: '5px'
-                            }}>
-                                <InputLabel id="groups-select-label">Группы</InputLabel>
-                                <Select
-                                    labelId="groups-select-label"
-                                    id="groups-select"
-                                    multiple
-                                    value={groups}
-                                    onChange={handleGroupsChange}
-                                    style={{width: '100%'}}
-                                    renderValue={(selected) => (selected as string[]).join(', ')}
-                                >
-                                    {faculty && availableGroups[faculty] && availableGroups[faculty].map((groupName, index) => (
-                                        <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <MyFormControl onDataReceived={handleDataFromChild}/>
                         </div>
                         <div className="questionContent">
                             {questionnaire.map((questionData, questionIndex) => (

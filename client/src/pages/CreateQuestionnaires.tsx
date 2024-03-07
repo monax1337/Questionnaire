@@ -117,18 +117,14 @@ const CreateQuestionnaires = () => {
             return newQuestionnaire;
         });
     };
-    const handleDataFromChild = (data:any) => {
-        setFaculty(data[0]);
-        setGroups(data[1]);
-        console.log(data)
-        console.log(data[0])
-        console.log(data[1])
+    const handleDataFromChild = () => {
+
     };
 
     return (
         <div>
             <MyAppBar navItems={['Выйти']}/>
-            <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire}/>
+             <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire}/>
 
             <div className="allContent">
                 {!modal && (
@@ -140,7 +136,8 @@ const CreateQuestionnaires = () => {
                                 onChange={handleFormNameChange}
                                 sx={{marginLeft: '5px'}}
                             />
-                            <MyFormControl onDataReceived={handleDataFromChild}/>
+                            <MyFormControl onDataReceived={handleDataFromChild} />
+
                         </div>
                         <div className="questionContent">
                             {questionnaire.map((questionData, questionIndex) => (

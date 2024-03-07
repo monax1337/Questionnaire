@@ -12,10 +12,12 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived }) => {
     const [availableGroups, setAvailableGroups] = useState<{ [key: string]: string[] }>({});
 
     useEffect(() => {
+
         if (socket) {
-            socket.onopen = () => {
+
+            if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify(["RequestForAvailableGroups"]))
-            };
+            }
             socket.onmessage = (event) => {
                 console.log('Received message:', event.data);
                 const [type, data] = JSON.parse(event.data);

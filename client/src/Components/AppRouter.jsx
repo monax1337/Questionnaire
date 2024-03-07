@@ -7,7 +7,7 @@ import QuestionnairesCompletion from "../pages/QuestionnairesCompletion";
 const AppRouter = () => {
     return (
         <Routes>
-            <Route path="/contolPanel" element={<ControlPanel />}/>
+            <Route path="/controlPanel" element={<ControlPanel />}/>
             <Route path="/createQuestionnaires" element={<CreateQuestionnaires />}/>
             <Route path="/questionnaires" element={<Questionnaires />}/>
             <Route path="/completion" element={<QuestionnairesCompletion />}/>

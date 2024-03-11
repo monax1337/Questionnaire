@@ -11,9 +11,10 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import {Link, useNavigate} from "react-router-dom";
 
 interface Props {
-    navItems: string[];
+    navItems: string[] | null;
     window?: () => Window;
 }
 
@@ -21,15 +22,20 @@ const drawerWidth = 240;
 
 export default function MyAppBar({window, navItems}: Props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const navigate = useNavigate();
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
     };
 
+    const handleBackNavigation = () => {
+        navigate(-1);
+    };
+
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{textAlign: 'center'}}>
             <List>
-                {navItems.map((item) => (
+                {navItems && navItems.map((item) => (
                     <ListItem key={item} disablePadding>
                         <ListItemButton sx={{textAlign: 'center'}}>
                             <ListItemText primary={item}/>
@@ -57,9 +63,15 @@ export default function MyAppBar({window, navItems}: Props) {
                         <MenuIcon/>
                     </IconButton>
                     <Box sx={{display: 'flex', flexGrow: 1, justifyContent: 'space-between'}}>
-                        {navItems.map((item) => (
+                        {navItems && navItems.map((item) => (
                             <Button key={item} sx={{color: '#fff'}}>
-                                {item}
+                                {item === 'Вернуться' ? (
+                                    <span onClick={handleBackNavigation} style={{ cursor: 'pointer' }}>
+                                        {item}
+                                    </span>
+                                ) : (
+                                    item
+                                )}
                             </Button>
                         ))}
                     </Box>

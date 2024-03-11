@@ -1,24 +1,19 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import {Container} from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import MyCard from "../Components/UI/Cards/MyCard";
-import Typography from "@mui/material/Typography";
-import {useEffect, useState} from "react";
 import {useWebSocket} from "../Contexts/WebSocketContext";
 
-interface QuestionnairesData {
-    name: string;
-}
-
-const Questionnaires: QuestionnairesData = () => {
+const ProfessorQuestionnaires = () => {
     const [availableQuestionnaires, setAvailableQuestionnaires] = useState<string[]>([]);
     const {socket} = useWebSocket();
-    let enteredQuestionnaire = ["group1"];
+    let ProfessorName = ["Admin"];
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaire]));
+            socket.send(JSON.stringify(["RequestForQuestionnairesProfessor", ProfessorName]));
         }
     }, [socket]);
 
@@ -26,7 +21,7 @@ const Questionnaires: QuestionnairesData = () => {
         if (socket) {
             socket.onopen = () => {
                 console.log('WebSocket connection opened.');
-                socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaire]))
+                socket.send(JSON.stringify(["RequestForQuestionnairesProfessor", ProfessorName]))
             };
             socket.onmessage = (event) => {
                 console.log('Received message:', event.data);
@@ -66,6 +61,6 @@ const Questionnaires: QuestionnairesData = () => {
             </Container>
         </div>
     );
-};
+}
 
-export default Questionnaires;
+export default ProfessorQuestionnaires;

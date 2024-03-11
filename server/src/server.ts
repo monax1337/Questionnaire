@@ -33,7 +33,7 @@ server.on('connection', async (ws: WebSocket) => {
 
                 pool0.close();
 
-                let availableGroupsObject:any = {};
+                let availableGroupsObject: any = {};
                 for (let i = 0; i < result0.recordset.length; i++) {
                     const faculty = result0.recordset[i].Faculty;
                     const groups = JSON.parse(result0.recordset[i].Groups);
@@ -115,7 +115,35 @@ server.on('connection', async (ws: WebSocket) => {
                 ws.send(JSON.stringify(['SendQuestion', questions]));
 
                 break;
+            case 'RequestForAnswerOptions':
+                const pool9 = await sql.connect(config);
 
+                const result9 = await pool9.request()
+                    .query(`
+                            SELECT OptionText
+                            FROM AnswerOptions
+                            WHERE question_id IN (
+                                SELECT id
+                                FROM SurveyQuestions
+                                WHERE questionnaire_id = (
+                                    SELECT id
+                                    FROM Questionnaires
+                                    WHERE SurveyName = '${msg[1]}'
+                                )
+                            )`
+                    );
+
+                pool9.close();
+
+                const answerOptions = [];
+
+                for (let i = 0; i < result9.recordset.length; i++) {
+                    answerOptions.push(result9.recordset[i].OptionText);
+                }
+
+                ws.send(JSON.stringify(['SendAnswerOptions', answerOptions]));
+
+                break;
             case 'SendStudentAnswer':
 
                 const pool4 = await sql.connect(config);

@@ -3,41 +3,47 @@ import {FormControl, RadioGroup, FormControlLabel, Radio, Button} from '@mui/mat
 import Typography from "@mui/material/Typography";
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import {useWebSocket} from "../Contexts/WebSocketContext";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 
 const QuestionnairesCompletion: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string>('');
     const {socket} = useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
+    const [answerOptions, setAnswerOptions] = useState<string[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const currentQuestion = questions[currentQuestionIndex];
 
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const name = queryParams.get('name');
+    // const location = useLocation();
+    // const queryParams = new URLSearchParams(location.search);
+    const {name} = useParams<{ name: string }>();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (socket && socket.readyState === WebSocket.OPEN && name) {
+            socket.send(JSON.stringify(["RequestForQuestion", name]));
+            socket.send(JSON.stringify(["RequestForAnswerOptions", name]));
+        }
+    }, [socket, name]);
 
     useEffect(() => {
         if (socket) {
             socket.onopen = () => {
-                if (name){
-                    console.log(name);
-                }
-
-                socket.send(JSON.stringify(["RequestForQuestion", name]))
-            }
+                socket.send(JSON.stringify(["RequestForQuestion", name]));
+                socket.send(JSON.stringify(["RequestForAnswerOptions", name]));
+            };
             socket.onmessage = (event) => {
-                console.log("fasf")
                 const data = JSON.parse(event.data);
-                console.log(data)
                 const [type, payload] = data;
                 if (type === 'SendQuestion') {
                     setQuestions(payload); // Установка массива вопросов
                     setCurrentQuestionIndex(0); // Сброс индекса текущего вопроса
                     setSelectedOption(''); // Сброс выбранного ответа
+                } else if (type === 'SendAnswerOptions') {
+                    setAnswerOptions(payload); // Установка массива вариантов ответов
                 }
             };
         }
-    }, [socket]);
+    }, [socket, name]);
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedOption((event.target as HTMLInputElement).value);
@@ -48,7 +54,8 @@ const QuestionnairesCompletion: React.FC = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setSelectedOption('');
         } else {
-            // Это последний вопрос, здесь вы можете выполнить какие-либо дополнительные действия
+            alert("Вы прошли анкету!");
+            navigate('/questionnaires');
         }
     };
 
@@ -64,8 +71,9 @@ const QuestionnairesCompletion: React.FC = () => {
                         <FormControl component="fieldset">
                             <RadioGroup aria-label="options" name="options" value={selectedOption}
                                         onChange={handleOptionChange}>
-                                {/* Варианты ответов для текущего вопроса */}
-                                {/* Можно реализовать аналогичным образом, как вы делали ранее */}
+                                {answerOptions.map((option, index) => (
+                                    <FormControlLabel key={index} value={option} control={<Radio/>} label={option}/>
+                                ))}
                             </RadioGroup>
                         </FormControl>
                         <Button

@@ -3,8 +3,10 @@ import {useWebSocket} from "../../../Contexts/WebSocketContext";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 interface iFormControl {
     onDataReceived({}):void;
+    style?: React.CSSProperties;
 }
-const MyFormControl: FC<iFormControl> = ({ onDataReceived }) => {
+
+const MyFormControl: FC<iFormControl> = ({ onDataReceived, style }) => {
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
     const {socket} = useWebSocket();
@@ -52,7 +54,7 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived }) => {
         }); // Вызываем функцию из props с передачей данных
     };
     return (
-        <div className="formControl">
+        <div className="formControl" style={style}>
             <FormControl required style={{
                 maxWidth: '300px',
                 minWidth: '300px',

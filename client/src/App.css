@@ -13,7 +13,6 @@
 .controlPanel {
     display: flex;
     justify-content: center;
-    margin-right: 10px;
 }
 
 .allContent {
@@ -49,7 +48,7 @@
 .formControl {
     display: flex;
     flex-direction: column;
-    align-items: stretch
+    align-items: stretch;
 }
 
 .questionContent {
@@ -80,4 +79,12 @@
     margin-top: 20px;
     display: flex;
     justify-content: center;
+}
+
+.LoginForm {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10%;
 }

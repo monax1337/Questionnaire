@@ -4,8 +4,8 @@ import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 import {useWebSocket} from "../Contexts/WebSocketContext";
 
 const ControlPanel = () => {
-    const {socket} = useWebSocket();
     const [load,setLoad]=useState(true);
+
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setLoad(false);
@@ -15,6 +15,7 @@ const ControlPanel = () => {
             clearTimeout(timeoutId); // Очистить таймаут при размонтировании компонента
         };
     }, []);
+
     const noFun=()=>{}
     return (
         <div>
@@ -33,7 +34,3 @@ const ControlPanel = () => {
 };
 
 export default ControlPanel;
-
-//можно ли добавить инфу в столбец который уже заполнен   МОЖНО
-//запрос на удаление групп и факультетов
-//запрос на добавление групп и факультетов

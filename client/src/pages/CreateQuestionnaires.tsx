@@ -1,16 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import MyModal from "../Components/UI/Modals/MyModal";
-import { TextField, Button, IconButton, Select, MenuItem, FormControl, InputLabel, Checkbox, ListItemText } from "@mui/material";
+import {
+    TextField,
+    Button,
+    IconButton,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Checkbox,
+    ListItemText
+} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { SelectChangeEvent } from '@mui/material';
+import {SelectChangeEvent} from '@mui/material';
 import {useWebSocket} from "../Contexts/WebSocketContext";
 import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 
 const CreateQuestionnaires = () => {
     const [modal, setModal] = useState(true);
-    const [questionnaire, setQuestionnaire] = useState([{ question: '', answers: ['',''] }]);
+    const [questionnaire, setQuestionnaire] = useState([{question: '', answers: ['', '']}]);
     const [formName, setFormName] = useState('');
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
@@ -24,7 +34,7 @@ const CreateQuestionnaires = () => {
 
     // Функция для добавления вопроса
     const addQuestion = () => {
-        setQuestionnaire(prevQuestionnaire => [...prevQuestionnaire, { question: '', answers: ['', ''] }]);
+        setQuestionnaire(prevQuestionnaire => [...prevQuestionnaire, {question: '', answers: ['', '']}]);
     };
 
     // Функция для удаления ответа
@@ -64,17 +74,16 @@ const CreateQuestionnaires = () => {
     const createQuestionnaire = (numberOfQuestions: string, answersArray: string[]) => {
         toggleModal(); // Закрываем модальное окно
 
-        if(answersArray.length>1) {
+        if (answersArray.length > 1) {
             const newQuestionnaire = Array.from({length: Number(numberOfQuestions)}, (_, index) => ({
                 question: `Вопрос ${index + 1}`,
                 answers: answersArray.slice(), // Копируем массив ответов
             }));
             setQuestionnaire(newQuestionnaire);
-        }
-        else{
+        } else {
             const newQuestionnaire = Array.from({length: Number(numberOfQuestions)}, (_, index) => ({
                 question: `Вопрос ${index + 1}`,
-                answers: ['',''], // Копируем массив ответов
+                answers: ['', ''], // Копируем массив ответов
             }));
             setQuestionnaire(newQuestionnaire);
         }
@@ -82,19 +91,14 @@ const CreateQuestionnaires = () => {
     };
 
 
-
-
-
     const handleFormNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormName(e.target.value);
     };
 
 
-
-
-    const sendQuestionnaireData = (data:any) => {
-        if(socket)
-            socket.send(JSON.stringify(["ReceiveProfessorQuestionnaire",data]));
+    const sendQuestionnaireData = (data: any) => {
+        if (socket)
+            socket.send(JSON.stringify(["ReceiveProfessorQuestionnaire", data]));
     };
 
     // Функция для добавления анкеты
@@ -124,7 +128,7 @@ const CreateQuestionnaires = () => {
     return (
         <div>
             <MyAppBar navItems={['Выйти']}/>
-             <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire}/>
+            <MyModal visible={modal} setVisible={toggleModal} create={createQuestionnaire}/>
 
             <div className="allContent">
                 {!modal && (
@@ -136,7 +140,7 @@ const CreateQuestionnaires = () => {
                                 onChange={handleFormNameChange}
                                 sx={{marginLeft: '5px'}}
                             />
-                            <MyFormControl onDataReceived={handleDataFromChild} />
+                            <MyFormControl onDataReceived={handleDataFromChild}/>
 
                         </div>
                         <div className="questionContent">
@@ -154,9 +158,9 @@ const CreateQuestionnaires = () => {
                                         <IconButton
                                             aria-label="delete question"
                                             onClick={() => deleteQuestion(questionIndex)}
-                                            style={{  }}
+                                            style={{}}
                                         >
-                                            <DeleteOutlinedIcon />
+                                            <DeleteOutlinedIcon/>
                                         </IconButton>
                                     </div>
                                     {questionData.answers.map((answer, answerIndex) => (
@@ -177,7 +181,8 @@ const CreateQuestionnaires = () => {
                                             </IconButton>
                                         </div>
                                     ))}
-                                    <Button sx={{marginTop:'15px'}}color="secondary" onClick={() => addAnswer(questionIndex)}>Добавить
+                                    <Button sx={{marginTop: '15px'}} color="secondary"
+                                            onClick={() => addAnswer(questionIndex)}>Добавить
                                         ответ</Button>
                                 </div>
                             ))}
@@ -186,7 +191,7 @@ const CreateQuestionnaires = () => {
                             <Button variant="contained" onClick={addQuestion}>Добавить вопрос</Button>
                         </div>
                         <div className="endOfCreate">
-                            <Button  variant="contained" color="secondary" onClick={addQuestionnaire}>Создать</Button>
+                            <Button variant="contained" color="secondary" onClick={addQuestionnaire}>Создать</Button>
                         </div>
                     </div>
                 )}

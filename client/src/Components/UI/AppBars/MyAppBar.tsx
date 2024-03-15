@@ -66,9 +66,13 @@ export default function MyAppBar({window, navItems}: Props) {
                         {navItems && navItems.map((item) => (
                             <Button key={item} sx={{color: '#fff'}}>
                                 {item === 'Вернуться' ? (
-                                    <span onClick={handleBackNavigation} style={{ cursor: 'pointer' }}>
+                                    <span onClick={handleBackNavigation} style={{cursor: 'pointer'}}>
                                         {item}
                                     </span>
+                                ) : item === 'Выйти' ? (
+                                    <Link to="/login" style={{textDecoration: 'none', color: 'inherit'}}>
+                                        {item}
+                                    </Link>
                                 ) : (
                                     item
                                 )}

@@ -39,6 +39,7 @@ const LoginPage = () => {
                         onDataReceived={() => {
                         }}
                         style={{display: showFormControl ? 'flex' : 'none'}}
+                        multiple={false}
                     />
                     {!showFormControl && userType === 'teacher' && (
                         <div style={{
@@ -47,7 +48,8 @@ const LoginPage = () => {
                             maxWidth: '300px',
                             minWidth: '300px'
                         }}>
-                            <TextField label="Login" variant="outlined" style={{marginBottom: "10px", marginTop: '10px',}}/>
+                            <TextField label="Login" variant="outlined"
+                                       style={{marginBottom: "10px", marginTop: '10px',}}/>
                             <TextField label="Password" type="password"/>
                         </div>
                     )}

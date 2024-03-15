@@ -7,7 +7,7 @@ import {useNavigate, useParams} from "react-router-dom";
 
 const QuestionnairesCompletion: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<number>(-1);
-    const {socket} = useWebSocket();
+    const {socket}= useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -55,9 +55,10 @@ const QuestionnairesCompletion: React.FC = () => {
             setSelectedOption(-1);
         } else {
             setSelectedAnswers([...selectedAnswers, selectedOption]);
+            if (socket)
+                socket.send(JSON.stringify(["SendStudentAnswers", selectedAnswers])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
             alert("Вы прошли анкету!");
-            console.log("Массив ответов:", selectedAnswers);
-            //navigate('/questionnaires');
+            navigate('/questionnaires');
         }
     };
 

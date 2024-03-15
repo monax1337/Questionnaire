@@ -140,7 +140,7 @@ const CreateQuestionnaires = () => {
                                 onChange={handleFormNameChange}
                                 sx={{marginLeft: '5px'}}
                             />
-                            <MyFormControl onDataReceived={handleDataFromChild}/>
+                            <MyFormControl onDataReceived={handleDataFromChild} multiple={true}/>
 
                         </div>
                         <div className="questionContent">

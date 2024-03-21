@@ -38,7 +38,10 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
             };
         }
     }, [socket]);
-
+    useEffect(() => {
+        // Send selected faculty and groups to parent component
+        sendDataToParent();
+    }, [faculty, groups]);
     const handleFacultyChange = (e: SelectChangeEvent<string>) => {
         const newFaculty = e.target.value;
         setFaculty(newFaculty);

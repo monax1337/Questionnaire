@@ -29,15 +29,17 @@ const LoginPage = () => {
             setShowFormControl(true);
         }
     };
+    const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
+        console.log(data);
 
+    };
     return (
         <div>
             <MyAppBar navItems={[]}/>
             {!load && (
                 <div className="LoginForm">
                     <MyFormControl
-                        onDataReceived={() => {
-                        }}
+                        onDataReceived={handleDataReceived}
                         style={{display: showFormControl ? 'flex' : 'none'}}
                         multiple={false}
                     />

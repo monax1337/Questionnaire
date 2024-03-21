@@ -24,6 +24,7 @@ const CreateQuestionnaires = () => {
     const [formName, setFormName] = useState('');
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
+    const [nothing,setNothing]=useState<null>(null);
     const {socket} = useWebSocket();
 
 
@@ -140,7 +141,7 @@ const CreateQuestionnaires = () => {
                                 onChange={handleFormNameChange}
                                 sx={{marginLeft: '5px'}}
                             />
-                            <MyFormControl onDataReceived={handleDataFromChild} multiple={true}/>
+                            <MyFormControl onDataReceived={handleDataFromChild} multiple={true} data={nothing}/>
 
                         </div>
                         <div className="questionContent">

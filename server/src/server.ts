@@ -302,6 +302,30 @@ server.on('connection', async (ws: WebSocket) => {
                 pool8.close();
 
                 break;
+            case 'RequestForAvailableGroupsForQuestionnaire':
+                // Extracting questionnaire name from the message
+                const questionnaireName = msg[1];
+
+                    // Connect to the database
+                    const pool10 = await sql.connect(config);
+
+                    // Query to fetch faculty and groups for the specified questionnaire
+                    const result10 = await pool10.request()
+                        .query(`
+                            SELECT Faculty, Groups
+                            FROM Questionnaires
+                            WHERE SurveyName = '${questionnaireName}'
+                        `);
+
+                    pool10.close();
+
+                    // Extracting faculty and groups from the result
+                    const faculty10 = result10.recordset[0].Faculty;
+                    const groups10 = JSON.parse(result10.recordset[0].Groups);
+                    // Sending faculty and groups to the client
+                    ws.send(JSON.stringify(['AvailableGroupsForQuestionnaire', { faculty10, groups10 }]));
+
+                break;
         }
     });
 });

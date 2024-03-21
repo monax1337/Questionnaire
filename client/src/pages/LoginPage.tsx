@@ -12,6 +12,7 @@ const LoginPage = () => {
     const [userType, setUserType] = useState('student');
     const [showFormControl, setShowFormControl] = useState(true);
     const [selectedGroup,setSelectedGroup]=useState({});
+    const [nothing,setNothing]=useState<null>(null);
     const { socket } = useWebSocket();
     const navigate = useNavigate();
 
@@ -52,6 +53,7 @@ const LoginPage = () => {
                         onDataReceived={handleDataReceived}
                         style={{display: showFormControl ? 'flex' : 'none'}}
                         multiple={false}
+                        data={nothing}
                     />
                     {!showFormControl && userType === 'teacher' && (
                         <div style={{

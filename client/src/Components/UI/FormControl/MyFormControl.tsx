@@ -1,48 +1,53 @@
-import React, {FC, useEffect, useState} from 'react';
-import {useWebSocket} from "../../../Contexts/WebSocketContext";
-import {Checkbox, FormControl, InputLabel, ListItemIcon, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import React, { FC, useEffect, useState } from 'react';
+import { useWebSocket } from "../../../Contexts/WebSocketContext";
+import { Checkbox, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 
 interface iFormControl {
-    onDataReceived({}): void;
+    onDataReceived(data: { faculty: string; groups: string[] }): void;
     style?: React.CSSProperties;
     multiple?: boolean;
+    data: { faculty: string; groups: string[] } | null;
 }
 
-const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
+const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data }) => {
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
-    const {socket} = useWebSocket();
+    const { socket } = useWebSocket();
     const [availableFaculties, setAvailableFaculties] = useState<string[]>([]);
     const [availableGroups, setAvailableGroups] = useState<{ [key: string]: string[] }>({});
 
     useEffect(() => {
-        if (socket) {
+        if (data) {
+            const { faculty, groups } = data;
+
+            const newData: { [key: string]: string[]; } = {};
+            newData[faculty] = groups;
+
+            // Если доступны новые факультеты, обновляем их список
+            const newFaculties = Object.keys(newData);
+            setAvailableFaculties(newFaculties);
+            setAvailableGroups(newData);
+        }
+        else if (socket) {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify(["RequestForAvailableGroups"]))
             }
             socket.onmessage = (event) => {
-                console.log('Received message:', event.data);
                 const [type, data] = JSON.parse(event.data);
-                console.log("Data:", data); // Вывести весь объект data
                 if (type === "AvailableGroups" && data) {
-                    // Итерируемся по ключам объекта data
                     const faculties = Object.keys(data);
-                    setAvailableFaculties(faculties); // Обновляем список факультетов
-
-                    const allGroups = Object.entries(data).reduce((acc, [faculty, groups]) => {
-                        acc[faculty] = groups as string[];
-                        return acc;
-                    }, {} as { [key: string]: string[] });
-                    setAvailableGroups(allGroups);
+                    setAvailableFaculties(faculties);
+                    setAvailableGroups(data);
                 }
             };
         }
     }, [socket]);
+
     useEffect(() => {
-        // Send selected faculty and groups to parent component
         sendDataToParent();
     }, [faculty, groups]);
+
     const handleFacultyChange = (e: SelectChangeEvent<string>) => {
         const newFaculty = e.target.value;
         setFaculty(newFaculty);
@@ -52,14 +57,13 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
     };
 
     const handleGroupsChange = (e: SelectChangeEvent<string | string[]>) => {
-        setGroups(e.target.value as string[] || []);
+        setGroups(e.target.value as string[]);
     };
+
     const sendDataToParent = () => {
-        const data = 'Данные из дочернего компонента';
-        onDataReceived({
-            faculty, groups
-        }); // Вызываем функцию из props с передачей данных
+        onDataReceived({ faculty, groups });
     };
+
     return (
         <div className="formControl" style={style}>
             <FormControl required style={{
@@ -74,7 +78,7 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
                     id="faculty-select"
                     value={faculty}
                     onChange={handleFacultyChange}
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                 >
                     {availableFaculties.map((facultyName, index) => (
                         <MenuItem key={index} value={facultyName}>{facultyName}</MenuItem>
@@ -94,7 +98,7 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
                     multiple={multiple}
                     value={groups}
                     onChange={handleGroupsChange}
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                     renderValue={(selected) => {
                         if (multiple) {
                             return Array.isArray(selected) ? selected.join(', ') : '';
@@ -104,22 +108,9 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
                     }}
                 >
                     {faculty && availableGroups[faculty] ? (
-                        multiple ? (
-                            availableGroups[faculty].map((groupName, index) => (
-                                    <MenuItem key={index} value={groupName}>
-                                        <ListItemIcon>
-                                            <Checkbox checked={groups.indexOf(groupName) > -1}/>
-                                        </ListItemIcon>
-                                        <ListItemText primary={groupName}/>
-                                    </MenuItem>
-                                )
-                            )
-                        ) : (
-                            availableGroups[faculty].map((groupName, index) => (
-                                    <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
-                                )
-                            )
-                        )
+                        availableGroups[faculty].map((groupName, index) => (
+                            <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
+                        ))
                     ) : (
                         <MenuItem disabled>Выберите факультет</MenuItem>
                     )}

@@ -5,7 +5,7 @@ import {useWebSocket} from "../Contexts/WebSocketContext";
 
 const ControlPanel = () => {
     const [load,setLoad]=useState(true);
-
+    const [nothing,setNothing]=useState<null>(null);
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setLoad(false);
@@ -23,7 +23,7 @@ const ControlPanel = () => {
             <div>
                 <h1 style={{display: "flex", justifyContent: "center"}}>Панель управления</h1>
                 <div className="controlPanel">
-                        <MyFormControl onDataReceived={noFun}/>
+                        <MyFormControl onDataReceived={noFun} data={nothing}/>
                 </div>
                 <Button variant="outlined">Primary</Button>
                 <Button variant="outlined">Primary</Button>

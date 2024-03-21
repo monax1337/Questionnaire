@@ -88,3 +88,17 @@
     align-items: center;
     margin-top: 10%;
 }
+
+.QuestionnaireInfo {
+    width: 65%;
+    display: flex;
+    margin: 10px auto 0 auto;
+    flex-direction: column;
+
+}
+
+@media (max-width: 600px) {
+    .QuestionnaireInfo {
+        width: 95%;
+    }
+}

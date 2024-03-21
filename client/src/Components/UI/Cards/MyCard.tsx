@@ -30,7 +30,10 @@ const MyCard = ({name}: MyCardProps) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Link to={`/completion/${name}`}>
+                        {/*<Link to={`/completion/${name}`}>*/}
+                        {/*    <Button size="small">Перейти</Button>*/}
+                        {/*</Link>*/}
+                        <Link to={`/results/${name}`}>
                             <Button size="small">Перейти</Button>
                         </Link>
                     </CardActions>

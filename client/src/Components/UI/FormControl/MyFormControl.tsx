@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useWebSocket} from "../../../Contexts/WebSocketContext";
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {Checkbox, FormControl, InputLabel, ListItemIcon, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import ListItemText from "@mui/material/ListItemText";
 
 interface iFormControl {
     onDataReceived({}): void;
@@ -103,9 +104,22 @@ const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple}) => {
                     }}
                 >
                     {faculty && availableGroups[faculty] ? (
-                        availableGroups[faculty].map((groupName, index) => (
-                            <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
-                        ))
+                        multiple ? (
+                            availableGroups[faculty].map((groupName, index) => (
+                                    <MenuItem key={index} value={groupName}>
+                                        <ListItemIcon>
+                                            <Checkbox checked={groups.indexOf(groupName) > -1}/>
+                                        </ListItemIcon>
+                                        <ListItemText primary={groupName}/>
+                                    </MenuItem>
+                                )
+                            )
+                        ) : (
+                            availableGroups[faculty].map((groupName, index) => (
+                                    <MenuItem key={index} value={groupName}>{groupName}</MenuItem>
+                                )
+                            )
+                        )
                     ) : (
                         <MenuItem disabled>Выберите факультет</MenuItem>
                     )}

@@ -59,7 +59,7 @@ const QuestionnairesCompletion: React.FC = () => {
             setSavedAnswers([...savedAnswers, selectedAnswers]); // Save answers
             console.log("All Answers:", savedAnswers); // Log all answers to console
             if (socket)
-                socket.send(JSON.stringify(["SendStudentAnswers", selectedAnswers])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
+                //socket.send(JSON.stringify(["SendStudentAnswers", [name,group,selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
             alert("Вы прошли анкету!");
             //navigate('/questionnaires');
         }

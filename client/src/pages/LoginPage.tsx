@@ -3,12 +3,18 @@ import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 import Button from "@mui/material/Button";
 import {TextField} from "@mui/material";
+import {useWebSocket} from "../Contexts/WebSocketContext";
+import {useNavigate} from "react-router-dom";
 
 
 const LoginPage = () => {
     const [load, setLoad] = useState(true);
     const [userType, setUserType] = useState('student');
     const [showFormControl, setShowFormControl] = useState(true);
+    const [selectedGroup,setSelectedGroup]=useState({});
+    const { socket } = useWebSocket();
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -30,9 +36,13 @@ const LoginPage = () => {
         }
     };
     const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
-        console.log(data);
-
+        setSelectedGroup(data)
     };
+    const sendGroup=()=>{
+        //socket.send(JSON.stringify(["SendStudentAnswers", selectedGroup]));
+        //useContext
+        navigate('/questionnaires', { state: { selectedGroup } });
+    }
     return (
         <div>
             <MyAppBar navItems={[]}/>
@@ -55,7 +65,7 @@ const LoginPage = () => {
                             <TextField label="Password" type="password"/>
                         </div>
                     )}
-                    <Button variant="contained" style={{marginTop: '15px'}}>
+                    <Button variant="contained" style={{marginTop: '15px'}} onClick={sendGroup}>
                         Войти
                     </Button>
                     <Button

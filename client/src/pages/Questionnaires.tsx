@@ -6,6 +6,7 @@ import MyCard from "../Components/UI/Cards/MyCard";
 import Typography from "@mui/material/Typography";
 import {useEffect, useState} from "react";
 import {useWebSocket} from "../Contexts/WebSocketContext";
+import {useLocation} from "react-router-dom";
 
 interface QuestionnairesData {
     name: string;
@@ -14,7 +15,9 @@ interface QuestionnairesData {
 const Questionnaires: QuestionnairesData = () => {
     const [availableQuestionnaires, setAvailableQuestionnaires] = useState<string[]>([]);
     const {socket} = useWebSocket();
-    let enteredQuestionnaire = ["group1"];
+    const location = useLocation(); // Get location object from React Router
+    const { selectedGroup } = location.state || {};
+    let enteredQuestionnaire =selectedGroup.groups ;
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {

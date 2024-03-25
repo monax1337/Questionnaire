@@ -54,6 +54,7 @@ const LoginPage = () => {
                         style={{display: showFormControl ? 'flex' : 'none'}}
                         multiple={false}
                         data={nothing}
+                        selectFirstByDefault={true}
                     />
                     {!showFormControl && userType === 'teacher' && (
                         <div style={{

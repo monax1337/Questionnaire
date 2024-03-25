@@ -1,25 +1,26 @@
-import React, { FC, useEffect, useState } from 'react';
-import { useWebSocket } from "../../../Contexts/WebSocketContext";
-import { Checkbox, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import ListItemText from "@mui/material/ListItemText";
+import React, {FC, useEffect, useState} from 'react';
+import {useWebSocket} from "../../../Contexts/WebSocketContext";
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 
 interface iFormControl {
     onDataReceived(data: { faculty: string; groups: string[] }): void;
+
     style?: React.CSSProperties;
     multiple?: boolean;
     data: { faculty: string; groups: string[] } | null;
+    selectFirstByDefault?: boolean;
 }
 
-const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data }) => {
+const MyFormControl: FC<iFormControl> = ({onDataReceived, style, multiple, data, selectFirstByDefault}) => {
     const [faculty, setFaculty] = useState('');
     const [groups, setGroups] = useState<string[]>([]);
-    const { socket } = useWebSocket();
+    const {socket} = useWebSocket();
     const [availableFaculties, setAvailableFaculties] = useState<string[]>([]);
     const [availableGroups, setAvailableGroups] = useState<{ [key: string]: string[] }>({});
 
     useEffect(() => {
         if (data) {
-            const { faculty, groups } = data;
+            const {faculty, groups} = data;
 
             const newData: { [key: string]: string[]; } = {};
             newData[faculty] = groups;
@@ -28,8 +29,7 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data
             const newFaculties = Object.keys(newData);
             setAvailableFaculties(newFaculties);
             setAvailableGroups(newData);
-        }
-        else if (socket) {
+        } else if (socket) {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify(["RequestForAvailableGroups"]))
             }
@@ -61,7 +61,7 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data
     };
 
     const sendDataToParent = () => {
-        onDataReceived({ faculty, groups });
+        onDataReceived({faculty, groups});
     };
 
     return (
@@ -78,7 +78,7 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data
                     id="faculty-select"
                     value={faculty}
                     onChange={handleFacultyChange}
-                    style={{ width: '100%' }}
+                    style={{width: '100%'}}
                 >
                     {availableFaculties.map((facultyName, index) => (
                         <MenuItem key={index} value={facultyName}>{facultyName}</MenuItem>
@@ -98,7 +98,7 @@ const MyFormControl: FC<iFormControl> = ({ onDataReceived, style, multiple, data
                     multiple={multiple}
                     value={groups}
                     onChange={handleGroupsChange}
-                    style={{ width: '100%' }}
+                    style={{width: '100%'}}
                     renderValue={(selected) => {
                         if (multiple) {
                             return Array.isArray(selected) ? selected.join(', ') : '';

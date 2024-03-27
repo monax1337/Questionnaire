@@ -51,13 +51,18 @@ server.on('connection', async (ws: WebSocket) => {
                 break;
 
             // Handling request for questionnaires available to students
+                //
+                //
+                // need rework(add faculty)
+                //
+                //
             case 'RequestForQuestionnaireStudent':
                 const pool1 = await sql.connect(config);
                 const result1 = await pool1.request()
                     .query(`
                         SELECT SurveyName
                         FROM Questionnaires
-                        WHERE Groups = 'Все' OR Groups LIKE '%${msg[1]}%'
+                        WHERE Faculty = '${msg[1].faculty}' AND Groups = 'Все' OR Groups LIKE '%${msg[1].group}%'
                     `);
                 pool1.close();
 
@@ -140,12 +145,18 @@ server.on('connection', async (ws: WebSocket) => {
                 break;
 
             // Handling submission of student answers
+                //
+                //
+                //need rework(add faculty)
+                //
+                //
             case 'SendStudentAnswers':
                 const pool4 = await sql.connect(config);
                 const answersData = msg[1];
                 const surveyName = answersData[0];
-                const groupName = answersData[1];
-                const answers = answersData[2];
+                const facultyName = answersData[1];
+                const groupName = answersData[2];
+                const answers = answersData[3];
 
                 // Query to insert student answers into the database
                 const surveyQuery = await pool4.request()

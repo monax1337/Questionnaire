@@ -22,7 +22,7 @@ const Questionnaires: QuestionnairesData = () => {
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaireGroup]));
+            socket.send(JSON.stringify(["RequestForQuestionnaireStudent", {faculty:enteredQuestionnaireFaculty,group:enteredQuestionnaireGroup}]));
         }
     }, [socket]);
 
@@ -30,7 +30,7 @@ const Questionnaires: QuestionnairesData = () => {
         if (socket) {
             socket.onopen = () => {
                 console.log('WebSocket connection opened.');
-                socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaireGroup]))
+                socket.send(JSON.stringify(["RequestForQuestionnaireStudent", {faculty:enteredQuestionnaireFaculty,group:enteredQuestionnaireGroup}]))
             };
             socket.onmessage = (event) => {
                 console.log('Received message:', event.data);

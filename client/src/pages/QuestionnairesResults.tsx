@@ -10,6 +10,7 @@ const QuestionnairesResults = () => {
     const {socket} = useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[][]>([]);
+    const [answerOptionsResults, setAnswerOptionsResults] = useState<string[][]>([]);
     const [groups, setGroups] = useState<string[]>([]);
     const [faculty, setFaculty] = useState<string>('');
     const {name} = useParams<{ name: string }>();
@@ -23,7 +24,6 @@ const QuestionnairesResults = () => {
             socket.send(JSON.stringify(["RequestForAvailableGroupsForQuestionnaire", name]));
             socket.send(JSON.stringify(["RequestForQuestion", name]));
             socket.send(JSON.stringify(["RequestForAnswerOptions", name]));
-
         }
     }, [socket, name]);
 
@@ -33,7 +33,6 @@ const QuestionnairesResults = () => {
                 socket.send(JSON.stringify(["RequestForAvailableGroupsForQuestionnaire", name]));
                 socket.send(JSON.stringify(["RequestForQuestion", name]));
                 socket.send(JSON.stringify(["RequestForAnswerOptions", name]));
-
             };
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
@@ -50,6 +49,9 @@ const QuestionnairesResults = () => {
                 if (type === 'SendAnswerOptions') {
                     setAnswerOptions(payload.map((options: string[]) => [...options]));
                 }
+                if (type === 'Answers') {
+                    setAnswerOptionsResults(payload.map((answers: string[]) => [...answers]));
+                }
                 //setLoad(false);
             };
         }
@@ -65,6 +67,17 @@ const QuestionnairesResults = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if(socket && socket.readyState === WebSocket.OPEN && groups){
+            socket.send(JSON.stringify(["RequestForAnswers", {name:name, faculty:faculty, group:groups}]));
+        }
+    }, [groups]);
+
+    const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
+        setFaculty(data.faculty);
+        setGroups(data.groups);
+    };
+
     return (
         <div>
             <MyAppBar navItems={['Выйти', 'Вернуться']}/>
@@ -77,8 +90,7 @@ const QuestionnairesResults = () => {
                         Имеют доступ
                     </Typography>
                     <MyFormControl
-                        onDataReceived={() => {
-                        }}
+                        onDataReceived={handleDataReceived}
                         multiple={false}
                         data={availableGroupsForQuestionnaire}
                     />
@@ -99,6 +111,13 @@ const QuestionnairesResults = () => {
                                             <ul>
                                                 {answerOptions && answerOptions.map((option, idx) => (
                                                     <li key={idx}>{option}</li>
+                                                ))}
+                                            </ul>
+                                        </TableCell>
+                                        <TableCell>
+                                            <ul>
+                                                {answerOptionsResults && answerOptionsResults.map((result, idx) => (
+                                                    <li key={idx}>{result}</li>
                                                 ))}
                                             </ul>
                                         </TableCell>

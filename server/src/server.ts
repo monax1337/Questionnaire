@@ -181,38 +181,58 @@ server.on('connection', async (ws: WebSocket) => {
 
                 break;
             case 'RequestForAnswers':
-                const surveyName1 = msg[1].surveyName;
-                const facultyName1 = msg[1].facultyName;
-                const groupName1 = msg[1].groupName;
+                const surveyName1 = msg[1].name;
+                const facultyName1 = msg[1].faculty;
+                const groupName1 = msg[1].group;
 
                 // Connect to the database
                 const pool = await sql.connect(config);
 
-                // Query to fetch answers based on survey name, faculty, and group
-                const result = await pool.request()
+                // Query to fetch questionnaire_id and group_id based on survey name, faculty, and group
+                const surveyQueryResult = await pool.request()
                     .input('surveyName', sql.NVarChar, surveyName1)
                     .input('facultyName', sql.NVarChar, facultyName1)
-                    .input('groupName', sql.NVarChar, groupName1)
+                    .input('groupName', sql.NVarChar, JSON.stringify(groupName1))
                     .query(`
-                        SELECT A.answers_json
-                        FROM Answers A
-                        INNER JOIN Questionnaires Q ON A.questionnaire_id = Q.id
-                        INNER JOIN AvailableGroups G ON A.group_id = G.id
-                        WHERE Q.SurveyName = @surveyName1
-                        AND G.Faculty = @facultyName1
-                        AND G.Groups LIKE '%' + @groupName1 + '%'
-                    `);
+        SELECT Q.id as questionnaire_id, G.id as group_id
+        FROM Questionnaires Q
+        INNER JOIN AvailableGroups G ON Q.Groups LIKE '%' + G.Groups + '%' 
+        WHERE Q.SurveyName = @surveyName
+        AND G.Faculty = @facultyName
+        AND G.Groups LIKE '%' + @groupName + '%'
+        `);
 
+                if (surveyQueryResult.recordset.length === 0) {
+                    ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
                     pool.close();
+                    break;
+                }
 
-                    // Extracting answers from the result and sending them to the client
-                    if (result.recordset.length > 0) {
-                        const answers = JSON.parse(result.recordset[0].answers_json);
-                        ws.send(JSON.stringify(['Answers', answers]));
-                    } else {
-                        ws.send(JSON.stringify(['Error', 'No answers found for the specified criteria']));
-                    }
+                const questionnaireId12 = surveyQueryResult.recordset[0].questionnaire_id;
+                const groupId12 = surveyQueryResult.recordset[0].group_id;
+
+                // Query to fetch answers based on questionnaire_id and group_id
+                const result = await pool.request()
+                    .input('questionnaireId', sql.Int, questionnaireId12)
+                    .input('groupId', sql.Int, groupId12)
+                    .query(`
+            SELECT A.answers_json
+            FROM Answers A
+            WHERE A.questionnaire_id = @questionnaireId
+            AND A.group_id = @groupId
+        `);
+
+                pool.close();
+
+                // Extracting answers from the result and sending them to the client
+                if (result.recordset.length > 0) {
+                    const answers = JSON.parse(result.recordset[0].answers_json);
+                    ws.send(JSON.stringify(['Answers', answers]));
+                } else {
+                    ws.send(JSON.stringify(['Error', 'No answers found for the specified criteria']));
+                }
                 break;
+
 
             // Handling reception of professor questionnaire
             case 'ReceiveProfessorQuestionnaire':

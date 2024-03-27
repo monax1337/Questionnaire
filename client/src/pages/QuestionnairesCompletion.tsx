@@ -5,17 +5,22 @@ import MyAppBar from "../Components/UI/AppBars/MyAppBar";
 import {useWebSocket} from "../Contexts/WebSocketContext";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 
+interface SelectedAnswers {
+    questionIndex: number;
+    selectedOption: number;
+}
+
 const QuestionnairesCompletion: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<number>(-1);
     const {socket} = useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+    const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswers[]>([]);
     const currentQuestion = questions[currentQuestionIndex];
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
-    const [savedAnswers, setSavedAnswers] = useState<number[][]>([]);
+    const [savedAnswers, setSavedAnswers] = useState<SelectedAnswers[][]>([]);
     const location = useLocation();
     const {studentFaculty, studentGroup} = location.state || {};
 
@@ -53,15 +58,16 @@ const QuestionnairesCompletion: React.FC = () => {
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
-            setSelectedAnswers([...selectedAnswers, selectedOption]);
+            setSelectedAnswers([...selectedAnswers, { questionIndex: currentQuestionIndex, selectedOption }]);
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setSelectedOption(-1);
         } else {
-            setSelectedAnswers([...selectedAnswers, selectedOption]);
+            setSelectedAnswers([...selectedAnswers, { questionIndex: currentQuestionIndex, selectedOption }]);
             setSavedAnswers([...savedAnswers, selectedAnswers]);
+            console.log("All Answers:", selectedAnswers);
             console.log("All Answers:", savedAnswers);
             if (socket)
-                socket.send(JSON.stringify(["SendStudentAnswers", [name, {faculty:studentFaculty,group:studentGroup}, selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
+                //socket.send(JSON.stringify(["SendStudentAnswers", [name, { faculty: studentFaculty, group: studentGroup }, selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
             alert("Вы прошли анкету!");
             //navigate('/questionnaires');
         }

@@ -60,7 +60,7 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     .query(`
                         SELECT SurveyName
                         FROM Questionnaires
-                        WHERE Groups = 'Все' OR Groups LIKE '%${msg[1]}%'
+                        WHERE Faculty = '${msg[1].faculty}' AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
                     `);
                 pool1.close();
                 // Extracting available questionnaires for students and sending them to the client
@@ -133,32 +133,85 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 ws.send(JSON.stringify(['SendAnswerOptions', answerOptions]));
                 break;
             // Handling submission of student answers
+            //
+            //
+            //need rework(add faculty)
+            //
+            //
             case 'SendStudentAnswers':
                 const pool4 = yield sql.connect(config);
                 const answersData = msg[1];
                 const surveyName = answersData[0];
-                const groupName = answersData[1];
+                const facultyName = answersData[1].faculty;
+                const groupName = answersData[1].group;
                 const answers = answersData[2];
-                // Query to insert student answers into the database
+                // Находим идентификатор анкеты по названию анкеты
                 const surveyQuery = yield pool4.request()
                     .input('surveyName', sql.NVarChar, surveyName)
                     .query('SELECT id FROM Questionnaires WHERE SurveyName = @surveyName');
                 const questionnaireId1 = surveyQuery.recordset[0].id;
+                // Находим идентификатор факультета по его имени
+                const facultyQuery = yield pool4.request()
+                    .input('facultyName', sql.NVarChar, facultyName)
+                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyName');
+                const facultyId = facultyQuery.recordset[0].id;
+                // Находим идентификатор группы по имени группы и идентификатору факультета
                 const groupQuery = yield pool4.request()
                     .input('groupName', sql.NVarChar, groupName)
-                    .query('SELECT id FROM AvailableGroups WHERE Groups LIKE @groupName');
+                    .input('facultyId', sql.Int, facultyId)
+                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyId AND Groups LIKE @groupName');
                 const groupId = groupQuery.recordset[0].id;
+                // Вставляем ответы студента в базу данных
                 const insertQuery1 = yield pool4.request()
                     .input('questionnaire_id', sql.Int, questionnaireId1)
                     .input('group_id', sql.Int, groupId)
                     .input('answers_json', sql.NVarChar, JSON.stringify(answers))
                     .query('INSERT INTO Answers (questionnaire_id, group_id, answers_json) VALUES (@questionnaire_id, @group_id, @answers_json)');
-                // Sending success or error response to the client
-                if (insertQuery1.rowsAffected[0] === 1) {
-                    ws.send(JSON.stringify(['Success']));
+                break;
+            case 'RequestForAnswers':
+                const surveyName1 = msg[1].name;
+                const facultyName1 = msg[1].faculty;
+                const groupName1 = msg[1].group;
+                // Connect to the database
+                const pool = yield sql.connect(config);
+                // Query to fetch questionnaire_id and group_id based on survey name, faculty, and group
+                const surveyQueryResult = yield pool.request()
+                    .input('surveyName', sql.NVarChar, surveyName1)
+                    .input('facultyName', sql.NVarChar, facultyName1)
+                    .input('groupName', sql.NVarChar, JSON.stringify(groupName1))
+                    .query(`
+        SELECT Q.id as questionnaire_id, G.id as group_id
+        FROM Questionnaires Q
+        INNER JOIN AvailableGroups G ON Q.Groups LIKE '%' + G.Groups + '%' 
+        WHERE Q.SurveyName = @surveyName
+        AND G.Faculty = @facultyName
+        AND G.Groups LIKE '%' + @groupName + '%'
+        `);
+                if (surveyQueryResult.recordset.length === 0) {
+                    ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
+                    pool.close();
+                    break;
+                }
+                const questionnaireId12 = surveyQueryResult.recordset[0].questionnaire_id;
+                const groupId12 = surveyQueryResult.recordset[0].group_id;
+                // Query to fetch answers based on questionnaire_id and group_id
+                const result = yield pool.request()
+                    .input('questionnaireId', sql.Int, questionnaireId12)
+                    .input('groupId', sql.Int, groupId12)
+                    .query(`
+            SELECT A.answers_json
+            FROM Answers A
+            WHERE A.questionnaire_id = @questionnaireId
+            AND A.group_id = @groupId
+        `);
+                pool.close();
+                // Extracting answers from the result and sending them to the client
+                if (result.recordset.length > 0) {
+                    const answers = JSON.parse(result.recordset[0].answers_json);
+                    ws.send(JSON.stringify(['Answers', answers]));
                 }
                 else {
-                    ws.send(JSON.stringify(['Error', 'Ошибка отправки ответов']));
+                    ws.send(JSON.stringify(['Error', 'No answers found for the specified criteria']));
                 }
                 break;
             // Handling reception of professor questionnaire

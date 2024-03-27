@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { FormControl, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
+import React, {useState, useEffect} from 'react';
+import {FormControl, RadioGroup, FormControlLabel, Radio, Button} from '@mui/material';
 import Typography from "@mui/material/Typography";
 import MyAppBar from "../Components/UI/AppBars/MyAppBar";
-import { useWebSocket } from "../Contexts/WebSocketContext";
-import { useNavigate, useParams } from "react-router-dom";
+import {useWebSocket} from "../Contexts/WebSocketContext";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 
 const QuestionnairesCompletion: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<number>(-1);
-    const { socket } = useWebSocket();
+    const {socket} = useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
     const currentQuestion = questions[currentQuestionIndex];
-    const { name } = useParams<{ name: string }>();
+    const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
     const [savedAnswers, setSavedAnswers] = useState<number[][]>([]);
+    const location = useLocation();
+    const {studentFaculty, studentGroup} = location.state || {};
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && name) {
@@ -56,10 +58,10 @@ const QuestionnairesCompletion: React.FC = () => {
             setSelectedOption(-1);
         } else {
             setSelectedAnswers([...selectedAnswers, selectedOption]);
-            setSavedAnswers([...savedAnswers, selectedAnswers]); // Save answers
-            console.log("All Answers:", savedAnswers); // Log all answers to console
+            setSavedAnswers([...savedAnswers, selectedAnswers]);
+            console.log("All Answers:", savedAnswers);
             if (socket)
-                //socket.send(JSON.stringify(["SendStudentAnswers", [name,group,selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
+                socket.send(JSON.stringify(["SendStudentAnswers", [name, studentFaculty, studentGroup, selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
             alert("Вы прошли анкету!");
             //navigate('/questionnaires');
         }
@@ -67,7 +69,7 @@ const QuestionnairesCompletion: React.FC = () => {
 
     return (
         <div>
-            <MyAppBar navItems={['Выйти', 'Вернуться']} />
+            <MyAppBar navItems={['Выйти', 'Вернуться']}/>
             <div className="QuestionnaireCard">
                 {currentQuestion && (
                     <>
@@ -78,7 +80,7 @@ const QuestionnairesCompletion: React.FC = () => {
                             <RadioGroup aria-label="options" name="options" value={selectedOption}
                                         onChange={handleOptionChange}>
                                 {answerOptions.map((option, index) => (
-                                    <FormControlLabel key={index} value={index} control={<Radio />} label={option} />
+                                    <FormControlLabel key={index} value={index} control={<Radio/>} label={option}/>
                                 ))}
                             </RadioGroup>
                         </FormControl>
@@ -87,7 +89,7 @@ const QuestionnairesCompletion: React.FC = () => {
                             color="primary"
                             onClick={handleNextQuestion}
                             disabled={selectedOption === -1}
-                            sx={{ marginTop: '10px' }}
+                            sx={{marginTop: '10px'}}
                         >
                             Ответить
                         </Button>

@@ -16,12 +16,13 @@ const Questionnaires: QuestionnairesData = () => {
     const [availableQuestionnaires, setAvailableQuestionnaires] = useState<string[]>([]);
     const {socket} = useWebSocket();
     const location = useLocation(); // Get location object from React Router
-    const { selectedGroup } = location.state || {};
-    let enteredQuestionnaire =selectedGroup.groups ;
+    const {selectedGroup} = location.state || {};
+    let enteredQuestionnaireGroup = selectedGroup.groups;
+    let enteredQuestionnaireFaculty = selectedGroup.faculty;
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaire]));
+            socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaireGroup]));
         }
     }, [socket]);
 
@@ -29,7 +30,7 @@ const Questionnaires: QuestionnairesData = () => {
         if (socket) {
             socket.onopen = () => {
                 console.log('WebSocket connection opened.');
-                socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaire]))
+                socket.send(JSON.stringify(["RequestForQuestionnaireStudent", enteredQuestionnaireGroup]))
             };
             socket.onmessage = (event) => {
                 console.log('Received message:', event.data);
@@ -56,7 +57,7 @@ const Questionnaires: QuestionnairesData = () => {
                         <Grid container justifyContent="center">
                             {availableQuestionnaires.map((questionnaire, index) => (
                                 <Grid item xs={12} key={index}>
-                                    <MyCard name={questionnaire}/>
+                                    <MyCard name={questionnaire} type="student" studentFaculty={enteredQuestionnaireFaculty} studentGroup={selectedGroup}/>
                                 </Grid>
                             ))}
                         </Grid>

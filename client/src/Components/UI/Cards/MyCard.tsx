@@ -9,9 +9,12 @@ import {Link} from "react-router-dom";
 
 interface MyCardProps {
     name: string;
+    type: string;
+    studentFaculty?: string;
+    studentGroup?: string;
 }
 
-const MyCard = ({name}: MyCardProps) => {
+const MyCard = ({name, type, studentFaculty, studentGroup}: MyCardProps) => {
     return (
         <Box sx={{minWidth: 300}}>
             <Card variant="outlined" sx={{margin: 2}}>
@@ -30,12 +33,17 @@ const MyCard = ({name}: MyCardProps) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        {/*<Link to={`/completion/${name}`}>*/}
-                        {/*    <Button size="small">Перейти</Button>*/}
-                        {/*</Link>*/}
-                        <Link to={`/results/${name}`}>
-                            <Button size="small">Перейти</Button>
-                        </Link>
+                        {
+                            type === "professor"
+                                ?
+                                <Link to={`/results/${name}`}>
+                                    <Button size="small">Перейти</Button>
+                                </Link>
+                                :
+                                <Link to={`/completion/${name}`} state={{ studentFaculty, studentGroup }}>
+                                    <Button size="small">Перейти</Button>
+                                </Link>
+                        }
                     </CardActions>
                 </React.Fragment>
             </Card>

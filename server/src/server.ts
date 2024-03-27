@@ -51,18 +51,13 @@ server.on('connection', async (ws: WebSocket) => {
                 break;
 
             // Handling request for questionnaires available to students
-                //
-                //
-                // need rework(add faculty)
-                //
-                //
             case 'RequestForQuestionnaireStudent':
                 const pool1 = await sql.connect(config);
                 const result1 = await pool1.request()
                     .query(`
                         SELECT SurveyName
                         FROM Questionnaires
-                        WHERE Faculty = '${msg[1].faculty}' AND Groups = 'Все' OR Groups LIKE '%${msg[1].group}%'
+                        WHERE Faculty = '${msg[1].faculty}' AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
                     `);
                 pool1.close();
 
@@ -154,34 +149,38 @@ server.on('connection', async (ws: WebSocket) => {
                 const pool4 = await sql.connect(config);
                 const answersData = msg[1];
                 const surveyName = answersData[0];
-                const facultyName = answersData[1];
-                const groupName = answersData[2];
-                const answers = answersData[3];
+                const facultyName = answersData[1].faculty;
+                const groupName = answersData[1].group;
+                const answers = answersData[2];
 
-                // Query to insert student answers into the database
+                // Находим идентификатор анкеты по названию анкеты
                 const surveyQuery = await pool4.request()
                     .input('surveyName', sql.NVarChar, surveyName)
                     .query('SELECT id FROM Questionnaires WHERE SurveyName = @surveyName');
                 const questionnaireId1 = surveyQuery.recordset[0].id;
 
+                // Находим идентификатор факультета по его имени
+                const facultyQuery = await pool4.request()
+                    .input('facultyName', sql.NVarChar, facultyName)
+                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyName');
+                const facultyId = facultyQuery.recordset[0].id;
+
+                // Находим идентификатор группы по имени группы и идентификатору факультета
                 const groupQuery = await pool4.request()
                     .input('groupName', sql.NVarChar, groupName)
-                    .query('SELECT id FROM AvailableGroups WHERE Groups LIKE @groupName');
+                    .input('facultyId', sql.Int, facultyId)
+                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyId AND Groups LIKE @groupName');
                 const groupId = groupQuery.recordset[0].id;
 
+                // Вставляем ответы студента в базу данных
                 const insertQuery1 = await pool4.request()
                     .input('questionnaire_id', sql.Int, questionnaireId1)
                     .input('group_id', sql.Int, groupId)
                     .input('answers_json', sql.NVarChar, JSON.stringify(answers))
                     .query('INSERT INTO Answers (questionnaire_id, group_id, answers_json) VALUES (@questionnaire_id, @group_id, @answers_json)');
 
-                // Sending success or error response to the client
-                if (insertQuery1.rowsAffected[0] === 1) {
-                    ws.send(JSON.stringify(['Success']));
-                } else {
-                    ws.send(JSON.stringify(['Error', 'Ошибка отправки ответов']));
-                }
                 break;
+
 
             // Handling reception of professor questionnaire
             case 'ReceiveProfessorQuestionnaire':

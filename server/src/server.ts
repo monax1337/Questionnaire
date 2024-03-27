@@ -180,7 +180,39 @@ server.on('connection', async (ws: WebSocket) => {
                     .query('INSERT INTO Answers (questionnaire_id, group_id, answers_json) VALUES (@questionnaire_id, @group_id, @answers_json)');
 
                 break;
+            case 'RequestForAnswers':
+                const surveyName1 = msg[1].surveyName;
+                const facultyName1 = msg[1].facultyName;
+                const groupName1 = msg[1].groupName;
 
+                // Connect to the database
+                const pool = await sql.connect(config);
+
+                // Query to fetch answers based on survey name, faculty, and group
+                const result = await pool.request()
+                    .input('surveyName', sql.NVarChar, surveyName1)
+                    .input('facultyName', sql.NVarChar, facultyName1)
+                    .input('groupName', sql.NVarChar, groupName1)
+                    .query(`
+                        SELECT A.answers_json
+                        FROM Answers A
+                        INNER JOIN Questionnaires Q ON A.questionnaire_id = Q.id
+                        INNER JOIN AvailableGroups G ON A.group_id = G.id
+                        WHERE Q.SurveyName = @surveyName1
+                        AND G.Faculty = @facultyName1
+                        AND G.Groups LIKE '%' + @groupName1 + '%'
+                    `);
+
+                    pool.close();
+
+                    // Extracting answers from the result and sending them to the client
+                    if (result.recordset.length > 0) {
+                        const answers = JSON.parse(result.recordset[0].answers_json);
+                        ws.send(JSON.stringify(['Answers', answers]));
+                    } else {
+                        ws.send(JSON.stringify(['Error', 'No answers found for the specified criteria']));
+                    }
+                break;
 
             // Handling reception of professor questionnaire
             case 'ReceiveProfessorQuestionnaire':

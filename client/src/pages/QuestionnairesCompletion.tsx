@@ -7,7 +7,7 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 
 interface SelectedAnswers {
     questionIndex: number;
-    selectedOption: number;
+    selectedOptions: (0 | 1)[]; // Массив с 0 и 1 для каждого варианта ответа
 }
 
 const QuestionnairesCompletion: React.FC = () => {
@@ -16,11 +16,12 @@ const QuestionnairesCompletion: React.FC = () => {
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswers[]>([]);
     const currentQuestion = questions[currentQuestionIndex];
+    const [currentAnswers, setCurrentAnswers] = useState<SelectedAnswers[]>([]);
+    const [selectedAnswers, setSelectedAnswers] = useState<(0 | 1)[][]>([[]]);
+    const [savedAnswers, setSavedAnswers] = useState<(0 | 1)[][]>([]);
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
-    const [savedAnswers, setSavedAnswers] = useState<SelectedAnswers[][]>([]);
     const location = useLocation();
     const {studentFaculty, studentGroup} = location.state || {};
 
@@ -53,23 +54,38 @@ const QuestionnairesCompletion: React.FC = () => {
     }, [socket, name]);
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedOption(parseInt((event.target as HTMLInputElement).value));
+        const selectedOption = parseInt((event.target as HTMLInputElement).value);
+        setSelectedAnswers(prevAnswers => {
+            const updatedAnswers = [...prevAnswers];
+            updatedAnswers[currentQuestionIndex] = new Array(answerOptions.length).fill(0).map((_, index) => (index === selectedOption ? 1 : 0));
+            return updatedAnswers;
+        });
+        setSelectedOption(selectedOption);
     };
 
     const handleNextQuestion = () => {
+        if (selectedOption !== -1) {
+            setSelectedAnswers((prevSelectedAnswers) => [
+                ...prevSelectedAnswers,
+                new Array(answerOptions.length).fill(0).map((_, index) => (index === selectedOption ? 1 : 0))
+            ]);
+        }
+
         if (currentQuestionIndex < questions.length - 1) {
-            setSelectedAnswers([...selectedAnswers, { questionIndex: currentQuestionIndex, selectedOption }]);
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setSelectedOption(-1);
         } else {
-            setSelectedAnswers([...selectedAnswers, { questionIndex: currentQuestionIndex, selectedOption }]);
-            setSavedAnswers([...savedAnswers, selectedAnswers]);
-            console.log("All Answers:", selectedAnswers);
-            console.log("All Answers:", savedAnswers);
-            if (socket)
-                //socket.send(JSON.stringify(["SendStudentAnswers", [name, { faculty: studentFaculty, group: studentGroup }, selectedAnswers]])); //["SendStudentAnswers",[name, group selectedAnswers]]//добавить сюда еще группу и название анкеты
+            setSavedAnswers((prevSavedAnswers) => [
+                ...prevSavedAnswers,
+                ...selectedAnswers,
+            ]);
+            console.log(selectedAnswers);
+            if (socket) {
+                // socket.send(JSON.stringify(["SendStudentAnswers", [name, { faculty: studentFaculty, group: studentGroup }, selectedAnswers]]));
+            }
             alert("Вы прошли анкету!");
-            //navigate('/questionnaires');
+            // navigate('/questionnaires');
+            setSelectedAnswers([]);
         }
     };
 

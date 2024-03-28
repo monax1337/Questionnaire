@@ -171,14 +171,16 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
             case 'RequestForAnswers':
                 const surveyName1 = msg[1].name;
                 const facultyName1 = msg[1].faculty;
-                const groupName1 = msg[1].group;
+                const group = msg[1].group;
                 // Connect to the database
                 const pool = yield sql.connect(config);
+                console.log(group);
+                console.log(JSON.stringify(group));
                 // Query to fetch questionnaire_id and group_id based on survey name, faculty, and group
                 const surveyQueryResult = yield pool.request()
                     .input('surveyName', sql.NVarChar, surveyName1)
                     .input('facultyName', sql.NVarChar, facultyName1)
-                    .input('groupName', sql.NVarChar, JSON.stringify(groupName1))
+                    .input('groupName', sql.NVarChar, JSON.stringify(group))
                     .query(`
         SELECT Q.id as questionnaire_id, G.id as group_id
         FROM Questionnaires Q

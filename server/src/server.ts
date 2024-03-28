@@ -140,11 +140,11 @@ server.on('connection', async (ws: WebSocket) => {
                 break;
 
             // Handling submission of student answers
-                //
-                //
-                //need rework(add faculty)
-                //
-                //
+            //
+            //
+            //need rework(add faculty)
+            //
+            //
             case 'SendStudentAnswers':
                 const pool4 = await sql.connect(config);
                 const answersData = msg[1];
@@ -183,16 +183,18 @@ server.on('connection', async (ws: WebSocket) => {
             case 'RequestForAnswers':
                 const surveyName1 = msg[1].name;
                 const facultyName1 = msg[1].faculty;
-                const groupName1 = msg[1].group;
+                const group = msg[1].group;
 
-                // Connect to the database
+// Connect to the database
                 const pool = await sql.connect(config);
+                console.log(group)
+                console.log(JSON.stringify(group))
 
                 // Query to fetch questionnaire_id and group_id based on survey name, faculty, and group
                 const surveyQueryResult = await pool.request()
                     .input('surveyName', sql.NVarChar, surveyName1)
                     .input('facultyName', sql.NVarChar, facultyName1)
-                    .input('groupName', sql.NVarChar, JSON.stringify(groupName1))
+                    .input('groupName', sql.NVarChar, JSON.stringify(group))
                     .query(`
         SELECT Q.id as questionnaire_id, G.id as group_id
         FROM Questionnaires Q
@@ -368,24 +370,24 @@ server.on('connection', async (ws: WebSocket) => {
                 // Extracting questionnaire name from the message
                 const questionnaireName = msg[1];
 
-                    // Connect to the database
-                    const pool10 = await sql.connect(config);
+                // Connect to the database
+                const pool10 = await sql.connect(config);
 
-                    // Query to fetch faculty and groups for the specified questionnaire
-                    const result10 = await pool10.request()
-                        .query(`
+                // Query to fetch faculty and groups for the specified questionnaire
+                const result10 = await pool10.request()
+                    .query(`
                             SELECT Faculty, Groups
                             FROM Questionnaires
                             WHERE SurveyName = '${questionnaireName}'
                         `);
 
-                    pool10.close();
+                pool10.close();
 
-                    // Extracting faculty and groups from the result
-                    const faculty10 = result10.recordset[0].Faculty;
-                    const groups10 = JSON.parse(result10.recordset[0].Groups);
-                    // Sending faculty and groups to the client
-                    ws.send(JSON.stringify(['AvailableGroupsForQuestionnaire', { faculty10, groups10 }]));
+                // Extracting faculty and groups from the result
+                const faculty10 = result10.recordset[0].Faculty;
+                const groups10 = JSON.parse(result10.recordset[0].Groups);
+                // Sending faculty and groups to the client
+                ws.send(JSON.stringify(['AvailableGroupsForQuestionnaire', {faculty10, groups10}]));
 
                 break;
         }

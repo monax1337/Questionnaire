@@ -188,7 +188,6 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 const questionnaireId12 = surveyQueryResult.recordset[0].questionnaire_id;
                 //const groups12 = surveyQueryResult.recordset[0].groups1;
-                console.log(surveyQueryResult.recordset[0] + "иди нахуй");
                 // Query to fetch answers based on questionnaire_id and group_id
                 const result = yield pool.request()
                     .input('questionnaireId', sql.Int, questionnaireId12)

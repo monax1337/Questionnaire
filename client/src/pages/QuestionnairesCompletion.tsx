@@ -23,7 +23,8 @@ const QuestionnairesCompletion: React.FC = () => {
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
     const location = useLocation();
-    const {studentFaculty, studentGroup} = location.state || {};
+    const {faculty, groups} = location.state || {};
+    //console.log(studentGroup)
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && name) {
@@ -82,11 +83,13 @@ const QuestionnairesCompletion: React.FC = () => {
             console.log(selectedAnswers);
             if (socket) {
                 socket.send(JSON.stringify(["SendStudentAnswers", [name,
-                    studentGroup,
+                    groups,
                     selectedAnswers]]));
             }
             alert("Вы прошли анкету!");
-            navigate('/questionnaires');
+
+            const selectedGroup = {groups, faculty};
+            navigate('/questionnaires', {state: {selectedGroup}});
             setSelectedAnswers([]);
         }
     };

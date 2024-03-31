@@ -17,6 +17,7 @@ const Questionnaires: QuestionnairesData = () => {
     const {socket} = useWebSocket();
     const location = useLocation(); // Get location object from React Router
     const {selectedGroup} = location.state || {};
+    console.log(selectedGroup)
     let enteredQuestionnaireGroup = selectedGroup.groups;
     let enteredQuestionnaireFaculty = selectedGroup.faculty;
 
@@ -57,7 +58,7 @@ const Questionnaires: QuestionnairesData = () => {
                         <Grid container justifyContent="center">
                             {availableQuestionnaires.map((questionnaire, index) => (
                                 <Grid item xs={12} key={index}>
-                                    <MyCard name={questionnaire} type="student" studentFaculty={enteredQuestionnaireFaculty} studentGroup={enteredQuestionnaireGroup}/>
+                                    <MyCard name={questionnaire} type="student" faculty={enteredQuestionnaireFaculty} groups={enteredQuestionnaireGroup}/>
                                 </Grid>
                             ))}
                         </Grid>

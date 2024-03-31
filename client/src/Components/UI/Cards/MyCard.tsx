@@ -10,11 +10,11 @@ import {Link} from "react-router-dom";
 interface MyCardProps {
     name: string;
     type: string;
-    studentFaculty?: string;
-    studentGroup?: string;
+    faculty?: string;
+    groups?: string;
 }
 
-const MyCard = ({name, type, studentFaculty, studentGroup}: MyCardProps) => {
+const MyCard = ({name, type, faculty, groups}: MyCardProps) => {
     return (
         <Box sx={{minWidth: 300}}>
             <Card variant="outlined" sx={{margin: 2}}>
@@ -40,7 +40,7 @@ const MyCard = ({name, type, studentFaculty, studentGroup}: MyCardProps) => {
                                     <Button size="small">Перейти</Button>
                                 </Link>
                                 :
-                                <Link to={`/completion/${name}`} state={{ studentFaculty, studentGroup }}>
+                                <Link to={`/completion/${name}`} state={{ faculty, groups }}>
                                     <Button size="small">Перейти</Button>
                                 </Link>
                         }

@@ -20,10 +20,10 @@ const LoginPage = () => {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setLoad(false);
-        }, 300); // 0.3 секунды в миллисекундах
+        }, 300);
 
         return () => {
-            clearTimeout(timeoutId); // Очистить таймаут при размонтировании компонента
+            clearTimeout(timeoutId);
         };
     }, []);
 
@@ -40,8 +40,7 @@ const LoginPage = () => {
         setSelectedGroup(data)
     };
     const sendGroup=()=>{
-        //socket.send(JSON.stringify(["SendStudentAnswers", selectedGroup]));
-        //useContext
+        console.log(selectedGroup)
         navigate('/questionnaires', { state: { selectedGroup } });
     }
     return (

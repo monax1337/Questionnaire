@@ -57,7 +57,7 @@ const Questionnaires: QuestionnairesData = () => {
                         <Grid container justifyContent="center">
                             {availableQuestionnaires.map((questionnaire, index) => (
                                 <Grid item xs={12} key={index}>
-                                    <MyCard name={questionnaire} type="student" studentFaculty={enteredQuestionnaireFaculty} studentGroup={selectedGroup}/>
+                                    <MyCard name={questionnaire} type="student" studentFaculty={enteredQuestionnaireFaculty} studentGroup={enteredQuestionnaireGroup}/>
                                 </Grid>
                             ))}
                         </Grid>

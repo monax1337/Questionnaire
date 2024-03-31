@@ -19,6 +19,7 @@ const QuestionnairesResults = () => {
         faculty: string;
         groups: string[]
     } | null>(null);
+
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && name) {
             socket.send(JSON.stringify(["RequestForAvailableGroupsForQuestionnaire", name]));
@@ -68,13 +69,13 @@ const QuestionnairesResults = () => {
     }, []);
 
     useEffect(() => {
-        if(socket && socket.readyState === WebSocket.OPEN && groups){
-            socket.send(JSON.stringify(["RequestForAnswers", {name:name, faculty:faculty, group:groups}]));
+        if (socket && socket.readyState === WebSocket.OPEN && groups && groups.length > 0) {
+            socket.send(JSON.stringify(["RequestForAnswers", {name: name, faculty: faculty, group: groups}]));
         }
     }, [groups]);
 
     const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
-        if(data.groups.length>0) {
+        if (data.groups.length > 0) {
             setFaculty(data.faculty);
             setGroups(data.groups);
         }

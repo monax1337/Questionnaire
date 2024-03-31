@@ -145,47 +145,38 @@ server.on('connection', async (ws: WebSocket) => {
             //need rework(add faculty)
             //
             //
+
+
+            //
             case 'SendStudentAnswers':
                 const pool4 = await sql.connect(config);
                 const answersData = msg[1];
                 const surveyName = answersData[0];
-                const facultyName = answersData[1].faculty;
-                const groupName = answersData[1].group;
+                const groupName = answersData[1];
                 const answers = answersData[2];
 
                 // Находим идентификатор анкеты по названию анкеты
                 const surveyQuery = await pool4.request()
                     .input('surveyName', sql.NVarChar, surveyName)
                     .query('SELECT id FROM Questionnaires WHERE SurveyName = @surveyName');
-                const questionnaireId1 = surveyQuery.recordset[0].id;
-
-                // Находим идентификатор факультета по его имени
-                const facultyQuery = await pool4.request()
-                    .input('facultyName', sql.NVarChar, facultyName)
-                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyName');
-                const facultyId = facultyQuery.recordset[0].id;
-
-                // Находим идентификатор группы по имени группы и идентификатору факультета
-                const groupQuery = await pool4.request()
-                    .input('groupName', sql.NVarChar, groupName)
-                    .input('facultyId', sql.Int, facultyId)
-                    .query('SELECT id FROM AvailableGroups WHERE Faculty = @facultyId AND Groups LIKE @groupName');
-                const groupId = groupQuery.recordset[0].id;
+                const questionnaireID = surveyQuery.recordset[0].id;
 
                 // Вставляем ответы студента в базу данных
-                const insertQuery1 = await pool4.request()
-                    .input('questionnaire_id', sql.Int, questionnaireId1)
-                    .input('group_id', sql.Int, groupId)
+                const InsertQuery = await pool4.request()
+                    .input('questionnaire_id', sql.Int, questionnaireID)
+                    .input('groups', sql.VarChar, groupName)
                     .input('answers_json', sql.NVarChar, JSON.stringify(answers))
-                    .query('INSERT INTO Answers (questionnaire_id, group_id, answers_json) VALUES (@questionnaire_id, @group_id, @answers_json)');
+                    .query('INSERT INTO Answers (questionnaire_id, groups, answers_json) VALUES (@questionnaire_id, @groups, @answers_json)');
 
+                pool4.close();
                 break;
+
             case 'RequestForAnswers':
                 const surveyName1 = msg[1].name;
                 const facultyName1 = msg[1].faculty;
                 const group = msg[1].group;
 
-// Connect to the database
+                // Connect to the database
                 const pool = await sql.connect(config);
                 console.log(group)
                 console.log(JSON.stringify(group))

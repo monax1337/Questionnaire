@@ -74,8 +74,10 @@ const QuestionnairesResults = () => {
     }, [groups]);
 
     const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
-        setFaculty(data.faculty);
-        setGroups(data.groups);
+        if(data.groups.length>0) {
+            setFaculty(data.faculty);
+            setGroups(data.groups);
+        }
     };
 
     return (

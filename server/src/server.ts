@@ -173,28 +173,26 @@ server.on('connection', async (ws: WebSocket) => {
 
             case 'RequestForAnswers':
                 const surveyName1 = msg[1].name;
-                const facultyName1 = msg[1].faculty;
+                //const facultyName1 = msg[1].faculty;
                 const group = msg[1].group;
 
                 // Connect to the database
                 const pool = await sql.connect(config);
-                console.log(group)
-                console.log(JSON.stringify(group))
+
 
                 // Query to fetch questionnaire_id and group_id based on survey name, faculty, and group
                 const surveyQueryResult = await pool.request()
                     .input('surveyName', sql.NVarChar, surveyName1)
-                    .input('facultyName', sql.NVarChar, facultyName1)
+                    //.input('facultyName', sql.NVarChar, facultyName1)
                     .input('groupName', sql.NVarChar, JSON.stringify(group))
                     .query(`
-        SELECT Q.id as questionnaire_id, G.id as group_id
-        FROM Questionnaires Q
-        INNER JOIN AvailableGroups G ON Q.Groups LIKE '%' + G.Groups + '%' 
-        WHERE Q.SurveyName = @surveyName
-        AND G.Faculty = @facultyName
-        AND G.Groups LIKE '%' + @groupName + '%'
-        `);
-
+                        SELECT Q.id as questionnaire_id, G.id as groups1
+                        FROM Questionnaires Q
+                        INNER JOIN AvailableGroups G ON Q.Groups LIKE '%' + G.Groups + '%' 
+                        WHERE Q.SurveyName = @surveyName                     
+                        AND G.Groups LIKE '%' + @groupName + '%'
+                     `);
+                        //AND G.Faculty = @facultyName
                 if (surveyQueryResult.recordset.length === 0) {
                     ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
                     pool.close();
@@ -202,18 +200,18 @@ server.on('connection', async (ws: WebSocket) => {
                 }
 
                 const questionnaireId12 = surveyQueryResult.recordset[0].questionnaire_id;
-                const groupId12 = surveyQueryResult.recordset[0].group_id;
+                const groups12 = surveyQueryResult.recordset[0].groups1;
 
                 // Query to fetch answers based on questionnaire_id and group_id
                 const result = await pool.request()
                     .input('questionnaireId', sql.Int, questionnaireId12)
-                    .input('groupId', sql.Int, groupId12)
+                    .input('groups', sql.VarChar, groups12)
                     .query(`
-            SELECT A.answers_json
-            FROM Answers A
-            WHERE A.questionnaire_id = @questionnaireId
-            AND A.group_id = @groupId
-        `);
+                        SELECT A.answers_json
+                        FROM Answers A
+                        WHERE A.questionnaire_id = @questionnaireId
+                        AND A.groups = @groups
+                    `);
 
                 pool.close();
 

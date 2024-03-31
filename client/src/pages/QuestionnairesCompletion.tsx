@@ -86,7 +86,7 @@ const QuestionnairesCompletion: React.FC = () => {
                     selectedAnswers]]));
             }
             alert("Вы прошли анкету!");
-            // navigate('/questionnaires');
+            navigate('/questionnaires');
             setSelectedAnswers([]);
         }
     };

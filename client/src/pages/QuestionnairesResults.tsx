@@ -49,6 +49,7 @@ const QuestionnairesResults = () => {
                 }
                 if (type === 'SendAnswerOptions') {
                     setAnswerOptions(payload.map((options: string[]) => [...options]));
+                    console.log(answerOptionsResults)
                 }
                 if (type === 'Answers') {
                     setAnswerOptionsResults(payload.map((answers: string[]) => [...answers]));
@@ -119,8 +120,8 @@ const QuestionnairesResults = () => {
                                         </TableCell>
                                         <TableCell>
                                             <ul>
-                                                {answerOptionsResults && answerOptionsResults.map((result, idx) => (
-                                                    <li key={idx}>{result}</li>
+                                                {answerOptionsResults[index] && answerOptionsResults[index].map((result, innerIdx) => (
+                                                    <li key={innerIdx}>{result}</li>
                                                 ))}
                                             </ul>
                                         </TableCell>

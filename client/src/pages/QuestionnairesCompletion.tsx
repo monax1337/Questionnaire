@@ -24,11 +24,12 @@ const QuestionnairesCompletion: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const {faculty, groups} = location.state || {};
+    const selectedGroup = {groups, faculty};
 
     useEffect(() => {
         const completedQuestionnaires = JSON.parse(localStorage.getItem('completedQuestionnaires') || '[]');
         if (completedQuestionnaires.includes(name)) {
-            navigate('/questionnaires');
+            navigate('/questionnaires',{state: {selectedGroup}});
         }
     }, []);
 
@@ -94,7 +95,7 @@ const QuestionnairesCompletion: React.FC = () => {
             }
             alert("Вы прошли анкету!");
 
-            const selectedGroup = {groups, faculty};
+
             const completedQuestionnaires = JSON.parse(localStorage.getItem('completedQuestionnaires') || '[]');
             completedQuestionnaires.push(name);
             localStorage.setItem('completedQuestionnaires', JSON.stringify(completedQuestionnaires));

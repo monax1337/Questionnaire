@@ -15,7 +15,7 @@ const LoginPage = () => {
     const [nothing,setNothing]=useState<null>(null);
     const { socket } = useWebSocket();
     const navigate = useNavigate();
-    localStorage.removeItem('completedQuestionnaires');
+
 
 
     useEffect(() => {

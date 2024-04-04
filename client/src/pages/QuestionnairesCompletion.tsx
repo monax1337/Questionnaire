@@ -26,12 +26,6 @@ const QuestionnairesCompletion: React.FC = () => {
     const {faculty, groups} = location.state || {};
     const selectedGroup = {groups, faculty};
 
-    useEffect(() => {
-        const completedQuestionnaires = JSON.parse(localStorage.getItem('completedQuestionnaires') || '[]');
-        if (completedQuestionnaires.includes(name)) {
-            navigate('/questionnaires',{state: {selectedGroup}});
-        }
-    }, []);
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && name) {
@@ -96,9 +90,6 @@ const QuestionnairesCompletion: React.FC = () => {
             alert("Вы прошли анкету!");
 
 
-            const completedQuestionnaires = JSON.parse(localStorage.getItem('completedQuestionnaires') || '[]');
-            completedQuestionnaires.push(name);
-            localStorage.setItem('completedQuestionnaires', JSON.stringify(completedQuestionnaires));
             setSelectedAnswers([]);
             navigate('/questionnaires', {state: {selectedGroup}});
 

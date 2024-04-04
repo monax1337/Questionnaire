@@ -172,14 +172,14 @@ server.on('connection', async (ws: WebSocket) => {
                     const surveyName1 = msg[1].name;
                     const group = msg[1].group;
 
-                    // Query to fetch questionnaire_id and group_id based on survey name and group
+                    // Query to fetch questionnaire_id based on survey name
                     const surveyQueryResult = await pool.request()
                         .input('surveyName', sql.NVarChar, surveyName1)
                         .query(`
-                            SELECT Q.id as questionnaire_id 
-                            FROM Questionnaires Q
-                            WHERE Q.SurveyName = @surveyName
-                        `);
+            SELECT Q.id as questionnaire_id 
+            FROM Questionnaires Q
+            WHERE Q.SurveyName = @surveyName
+        `);
 
                     if (surveyQueryResult.recordset.length === 0) {
                         ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
@@ -188,25 +188,26 @@ server.on('connection', async (ws: WebSocket) => {
 
                     const questionnaireId12 = surveyQueryResult.recordset[0].questionnaire_id;
 
-                    // Query to fetch answers based on questionnaire_id and group
+                    // Query to fetch all answers based on questionnaire_id and group
                     const result = await pool.request()
                         .input('questionnaireId', sql.Int, questionnaireId12)
                         .input('groups', sql.VarChar, group)
                         .query(`
-                            SELECT A.answers_json
-                            FROM Answers A
-                            WHERE A.questionnaire_id = @questionnaireId
-                            AND A.groups = @groups
-                        `);
+            SELECT A.answers_json
+            FROM Answers A
+            WHERE A.questionnaire_id = @questionnaireId
+            AND A.groups = @groups
+        `);
 
                     // Extracting answers from the result and sending them to the client
                     if (result.recordset.length > 0) {
-                        const answers = JSON.parse(result.recordset[0].answers_json);
+                        const answers = result.recordset.map(record => JSON.parse(record.answers_json));
                         ws.send(JSON.stringify(['Answers', answers]));
                     } else {
                         ws.send(JSON.stringify(['Error', 'No answers found for the specified criteria']));
                     }
                     break;
+
 
 
                 // Handling reception of professor questionnaire

@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import MyCard from "../Components/UI/Cards/MyCard";
 import {useWebSocket} from "../Contexts/WebSocketContext";
+import {Link} from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const ProfessorQuestionnaires = () => {
     const [availableQuestionnaires, setAvailableQuestionnaires] = useState<string[]>([]);
@@ -58,6 +60,11 @@ const ProfessorQuestionnaires = () => {
                         Нет доступных анкет.
                     </Typography>
                 }
+                <Grid container justifyContent="center" mt={3}>
+                    <Button variant="contained" color="primary" component={Link} to="/createQuestionnaires">
+                        Создать новую анкету
+                    </Button>
+                </Grid>
             </Container>
         </div>
     );

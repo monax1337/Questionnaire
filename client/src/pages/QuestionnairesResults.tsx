@@ -10,7 +10,7 @@ const QuestionnairesResults = () => {
     const {socket} = useWebSocket();
     const [questions, setQuestions] = useState<string[]>([]);
     const [answerOptions, setAnswerOptions] = useState<string[][]>([]);
-    const [answerOptionsResults, setAnswerOptionsResults] = useState<string[][]>([]);
+    const [answerOptionsResults, setAnswerOptionsResults] = useState<{ [question: string]: number[] }>({});
     const [groups, setGroups] = useState<string[]>([]);
     const [faculty, setFaculty] = useState<string>('');
     const {name} = useParams<{ name: string }>();
@@ -52,7 +52,18 @@ const QuestionnairesResults = () => {
                     console.log(answerOptionsResults)
                 }
                 if (type === 'Answers') {
-                    setAnswerOptionsResults(payload.map((answers: string[]) => [...answers]));
+                    const results: { [question: string]: number[] } = {};
+                    payload.forEach((studentAnswers: number[][]) => {
+                        studentAnswers.forEach((answers, index) => {
+                            answers.forEach((answer, i) => {
+                                if (!results[questions[index]]) {
+                                    results[questions[index]] = new Array(answerOptions[index].length).fill(0);
+                                }
+                                results[questions[index]][i] += answer;
+                            });
+                        });
+                    });
+                    setAnswerOptionsResults(results);
                 }
                 //setLoad(false);
             };
@@ -120,8 +131,8 @@ const QuestionnairesResults = () => {
                                         </TableCell>
                                         <TableCell>
                                             <ul>
-                                                {answerOptionsResults[index] && answerOptionsResults[index].map((result, innerIdx) => (
-                                                    <li key={innerIdx}>{result}</li>
+                                                {answerOptions[index].map((option, idx) => (
+                                                    <li key={idx}>{answerOptionsResults[question] && answerOptionsResults[question][idx]}</li>
                                                 ))}
                                             </ul>
                                         </TableCell>

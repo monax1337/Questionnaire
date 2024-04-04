@@ -4,7 +4,8 @@ import {useWebSocket} from "../Contexts/WebSocketContext";
 import {useParams} from "react-router-dom";
 import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 import Typography from "@mui/material/Typography";
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {List, ListItemIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import ListItem from "@mui/material/ListItem";
 
 const QuestionnairesResults = () => {
     const {socket} = useWebSocket();
@@ -52,23 +53,29 @@ const QuestionnairesResults = () => {
                     console.log(answerOptionsResults)
                 }
                 if (type === 'Answers') {
+                    console.log("Received answer results:", payload);
                     const results: { [question: string]: number[] } = {};
-                    payload.forEach((studentAnswers: number[][]) => {
-                        studentAnswers.forEach((answers, index) => {
-                            answers.forEach((answer, i) => {
-                                if (!results[questions[index]]) {
-                                    results[questions[index]] = new Array(answerOptions[index].length).fill(0);
+
+                    payload.forEach((studentAnswers: number[][], studentIndex: number) => {
+                        studentAnswers.forEach((answers: number[], questionIndex: number) => {
+                            answers.forEach((answer, optionIndex) => {
+                                const question = questions[questionIndex];
+                                const options = answerOptions[questionIndex];
+                                if (!results[question]) {
+                                    results[question] = new Array(options.length).fill(0);
                                 }
-                                results[questions[index]][i] += answer;
+                                results[question][optionIndex] += answer;
                             });
                         });
                     });
+
+                    console.log("Computed answer results:", results);
                     setAnswerOptionsResults(results);
                 }
                 //setLoad(false);
             };
         }
-    }, [socket, name]);
+    }, [socket, name, questions, answerOptions]);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -123,18 +130,19 @@ const QuestionnairesResults = () => {
                                     <TableRow key={index}>
                                         <TableCell>{question}</TableCell>
                                         <TableCell>
-                                            <ul>
+                                            <List dense>
                                                 {answerOptions && answerOptions.map((option, idx) => (
-                                                    <li key={idx}>{option}</li>
+                                                    <ListItem key={idx}>{option}</ListItem>
                                                 ))}
-                                            </ul>
+                                            </List>
                                         </TableCell>
                                         <TableCell>
-                                            <ul>
+                                            <List dense>
                                                 {answerOptions[index].map((option, idx) => (
-                                                    <li key={idx}>{answerOptionsResults[question] && answerOptionsResults[question][idx]}</li>
+                                                    <ListItem
+                                                        key={idx}>{answerOptionsResults[question] && answerOptionsResults[question][idx]}</ListItem>
                                                 ))}
-                                            </ul>
+                                            </List>
                                         </TableCell>
                                     </TableRow>
                                 ))}

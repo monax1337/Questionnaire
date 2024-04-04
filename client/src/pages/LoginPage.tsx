@@ -6,17 +6,13 @@ import {TextField} from "@mui/material";
 import {useWebSocket} from "../Contexts/WebSocketContext";
 import {useNavigate} from "react-router-dom";
 
-
 const LoginPage = () => {
     const [load, setLoad] = useState(true);
     const [userType, setUserType] = useState('student');
     const [showFormControl, setShowFormControl] = useState(true);
     const [selectedGroup,setSelectedGroup]=useState({});
     const [nothing,setNothing]=useState<null>(null);
-    const { socket } = useWebSocket();
     const navigate = useNavigate();
-
-
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -37,13 +33,16 @@ const LoginPage = () => {
             setShowFormControl(true);
         }
     };
+
     const handleDataReceived = (data: { faculty: string; groups: string[] }) => {
         setSelectedGroup(data)
     };
+
     const sendGroup=()=>{
         console.log(selectedGroup)
         navigate('/questionnaires', { state: { selectedGroup } });
     }
+
     return (
         <div>
             <MyAppBar navItems={[]}/>
@@ -72,6 +71,7 @@ const LoginPage = () => {
                         Войти
                     </Button>
                     <Button
+                        disabled={true}
                         onClick={handleLoginTypeChange}
                         style={{
                             textTransform: 'none',

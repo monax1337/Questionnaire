@@ -5,7 +5,7 @@ import * as WebSocket from 'ws';
 const config: sql.config = {
     user: 'questionnaires',
     password: 'pass123',
-    server: 'localhost',
+    server: 'mssql',
     database: 'Questionnaires',
     options: {
         encrypt: true,

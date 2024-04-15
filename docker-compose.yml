@@ -2,9 +2,10 @@ version: '3.7'
 
 services:
   mssql:
-    build:
-      context: ./DB
-      dockerfile: Dockerfile
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./DB/configure-db.sh:/choto/configure-db.sh
+      - ./DB/setup.sql:/choto/setup.sql
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "Pass1234567890"

@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/mssql/server:2022-latest
 
-
+USER root
 # Bundle config source
 COPY . /cheto/config
 WORKDIR /cheto/config

@@ -13,8 +13,8 @@ const sql = require("mssql");
 const WebSocket = require("ws");
 // Database configuration
 const config = {
-    user: 'questionnaires',
-    password: 'pass123',
+    user: 'sa',
+    password: 'Pass1234567890',
     server: 'localhost',
     database: 'Questionnaires',
     options: {

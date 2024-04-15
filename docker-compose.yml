@@ -2,10 +2,12 @@ version: '3.7'
 
 services:
   mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    build:
+      context: ./DB
+      dockerfile: Dockerfile
     environment:
-      SA_PASSWORD: "pass123"
       ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Pass1234567890"
     ports:
       - "1433:1433"
     networks:
@@ -15,11 +17,6 @@ services:
     build: ./server
     depends_on:
       - mssql
-    environment:
-      - SQL_USER=sa
-      - SQL_PASSWORD=pass123
-      - SQL_SERVER=msqsl
-      - SQL_DATABASE=Questionnaires
     ports:
       - "8080:8080"
     networks:

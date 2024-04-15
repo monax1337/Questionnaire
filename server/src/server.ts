@@ -3,10 +3,11 @@ import * as WebSocket from 'ws';
 
 // Database configuration
 const config: sql.config = {
-    user: 'questionnaires',
-    password: 'pass123',
+    user: 'sa',
+    password: 'Pass1234567890',
     server: 'mssql',
-    database: 'Questionnaires',
+    database: 'mssql',
+    port: 1433,
     options: {
         encrypt: true,
         trustServerCertificate: true
@@ -40,9 +41,9 @@ server.on('connection', async (ws: WebSocket) => {
                     // Query to fetch available groups
                     const result0 = await pool0.request()
                         .query(`
-                        SELECT DISTINCT Faculty, Groups
-                        FROM AvailableGroups
-                    `);
+                            SELECT DISTINCT Faculty, Groups
+                            FROM AvailableGroups
+                        `);
                     pool0.close();
 
                     // Extracting available groups from the result and sending them to the client
@@ -61,10 +62,11 @@ server.on('connection', async (ws: WebSocket) => {
                     const pool1 = await sql.connect(config);
                     const result1 = await pool1.request()
                         .query(`
-                        SELECT SurveyName
-                        FROM Questionnaires
-                        WHERE Faculty = '${msg[1].faculty}' AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
-                    `);
+                            SELECT SurveyName
+                            FROM Questionnaires
+                            WHERE Faculty = '${msg[1].faculty}'
+                              AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
+                        `);
                     pool1.close();
 
                     // Extracting available questionnaires for students and sending them to the client
@@ -80,10 +82,10 @@ server.on('connection', async (ws: WebSocket) => {
                     const pool2 = await sql.connect(config);
                     const result2 = await pool2.request()
                         .query(`
-                        SELECT SurveyName
-                        FROM Questionnaires
-                        WHERE ProfessorName = '${msg[1]}'
-                    `);
+                            SELECT SurveyName
+                            FROM Questionnaires
+                            WHERE ProfessorName = '${msg[1]}'
+                        `);
                     pool2.close();
 
                     // Extracting available questionnaires for professors and sending them to the client
@@ -100,14 +102,12 @@ server.on('connection', async (ws: WebSocket) => {
                     const pool3 = await sql.connect(config);
                     const result3 = await pool3.request()
                         .query(`
-                        SELECT QuestionText
-                        FROM SurveyQuestions
-                        WHERE questionnaire_id = (
-                            SELECT id
-                            FROM Questionnaires
-                            WHERE SurveyName = '${msg[1]}'
-                        )
-                    `);
+                            SELECT QuestionText
+                            FROM SurveyQuestions
+                            WHERE questionnaire_id = (SELECT id
+                                                      FROM Questionnaires
+                                                      WHERE SurveyName = '${msg[1]}')
+                        `);
                     pool3.close();
 
                     // Extracting questions from the result and sending them to the client
@@ -123,17 +123,13 @@ server.on('connection', async (ws: WebSocket) => {
                     const pool9 = await sql.connect(config);
                     const result9 = await pool9.request()
                         .query(`
-                        SELECT OptionText
-                        FROM AnswerOptions
-                        WHERE question_id IN (
-                            SELECT id
-                            FROM SurveyQuestions
-                            WHERE questionnaire_id = (
-                                SELECT id
-                                FROM Questionnaires
-                                WHERE SurveyName = '${msg[1]}'
-                            )
-                        )`
+                            SELECT OptionText
+                            FROM AnswerOptions
+                            WHERE question_id IN (SELECT id
+                                                  FROM SurveyQuestions
+                                                  WHERE questionnaire_id = (SELECT id
+                                                                            FROM Questionnaires
+                                                                            WHERE SurveyName = '${msg[1]}'))`
                         );
                     pool9.close();
 
@@ -176,10 +172,10 @@ server.on('connection', async (ws: WebSocket) => {
                     const surveyQueryResult = await pool.request()
                         .input('surveyName', sql.NVarChar, surveyName1)
                         .query(`
-            SELECT Q.id as questionnaire_id 
-            FROM Questionnaires Q
-            WHERE Q.SurveyName = @surveyName
-        `);
+                            SELECT Q.id as questionnaire_id
+                            FROM Questionnaires Q
+                            WHERE Q.SurveyName = @surveyName
+                        `);
 
                     if (surveyQueryResult.recordset.length === 0) {
                         ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
@@ -193,11 +189,11 @@ server.on('connection', async (ws: WebSocket) => {
                         .input('questionnaireId', sql.Int, questionnaireId12)
                         .input('groups', sql.VarChar, group)
                         .query(`
-            SELECT A.answers_json
-            FROM Answers A
-            WHERE A.questionnaire_id = @questionnaireId
-            AND A.groups = @groups
-        `);
+                            SELECT A.answers_json
+                            FROM Answers A
+                            WHERE A.questionnaire_id = @questionnaireId
+                              AND A.groups = @groups
+                        `);
 
                     // Extracting answers from the result and sending them to the client
                     if (result.recordset.length > 0) {
@@ -222,9 +218,9 @@ server.on('connection', async (ws: WebSocket) => {
                     const poolInsert = await sql.connect(config);
                     const insertQuery =
                         `
-                        INSERT INTO Questionnaires (SurveyName, Groups, ProfessorName, Faculty)
-                        VALUES ('${formName}', '${JSON.stringify(groups)}', 'Admin', '${faculty}')
-                    `;
+                            INSERT INTO Questionnaires (SurveyName, Groups, ProfessorName, Faculty)
+                            VALUES ('${formName}', '${JSON.stringify(groups)}', 'Admin', '${faculty}')
+                        `;
                     await poolInsert.request().query(insertQuery);
                     poolInsert.close();
 
@@ -232,10 +228,10 @@ server.on('connection', async (ws: WebSocket) => {
                     const poolId = await sql.connect(config);
                     const idQuery =
                         `
-                        SELECT id
-                        FROM Questionnaires
-                        WHERE SurveyName = '${formName}'
-                    `;
+                            SELECT id
+                            FROM Questionnaires
+                            WHERE SurveyName = '${formName}'
+                        `;
                     const resultId = await poolId.request().query(idQuery);
                     const questionnaireId = resultId.recordset[0].id;
                     poolId.close();
@@ -244,9 +240,9 @@ server.on('connection', async (ws: WebSocket) => {
                     for (const question of questionnaire) {
                         const insertQuestionQuery =
                             `
-                            INSERT INTO SurveyQuestions (questionnaire_id, QuestionText)
-                            VALUES (${questionnaireId}, '${question.question}')
-                        `;
+                                INSERT INTO SurveyQuestions (questionnaire_id, QuestionText)
+                                VALUES (${questionnaireId}, '${question.question}')
+                            `;
                         const poolQuestion = await sql.connect(config);
                         await poolQuestion.request().query(insertQuestionQuery);
                         poolQuestion.close();
@@ -254,10 +250,11 @@ server.on('connection', async (ws: WebSocket) => {
                         const poolQuestionId = await sql.connect(config);
                         const questionIdQuery =
                             `
-                            SELECT id
-                            FROM SurveyQuestions
-                            WHERE questionnaire_id = ${questionnaireId} AND QuestionText = '${question.question}'
-                        `;
+                                SELECT id
+                                FROM SurveyQuestions
+                                WHERE questionnaire_id = ${questionnaireId}
+                                  AND QuestionText = '${question.question}'
+                            `;
                         const resultQuestionId = await poolQuestionId.request().query(questionIdQuery);
                         const questionId = resultQuestionId.recordset[0].id;
                         poolQuestionId.close();
@@ -265,9 +262,9 @@ server.on('connection', async (ws: WebSocket) => {
                         for (const answer of question.answers) {
                             const insertAnswerQuery =
                                 `
-                                INSERT INTO AnswerOptions (question_id, OptionText)
-                                VALUES (${questionId}, '${answer}')
-                            `;
+                                    INSERT INTO AnswerOptions (question_id, OptionText)
+                                    VALUES (${questionId}, '${answer}')
+                                `;
                             const poolAnswer = await sql.connect(config);
                             await poolAnswer.request().query(insertAnswerQuery);
                             poolAnswer.close();
@@ -282,10 +279,10 @@ server.on('connection', async (ws: WebSocket) => {
                     // Check if the user already exists
                     const result6 = await pool6.request()
                         .query`
-                    SELECT Login
-                    FROM Accounts
-                    WHERE Login = ${msg[1]}
-                `;
+                        SELECT Login
+                        FROM Accounts
+                        WHERE Login = ${msg[1]}
+                    `;
 
                     // Sending error message if user already exists, otherwise registering the user
                     if (result6.recordset.length > 0) {
@@ -299,10 +296,10 @@ server.on('connection', async (ws: WebSocket) => {
 
                         const result7 = await pool6.request()
                             .query`
-                        INSERT INTO Accounts
-                            (Login, Password)
-                        VALUES (@Login, @Password)
-                    `;
+                            INSERT INTO Accounts
+                                (Login, Password)
+                            VALUES (@Login, @Password)
+                        `;
 
                         // Sending success or error response to the client
                         if (result7.rowsAffected[0] === 1) {
@@ -324,11 +321,11 @@ server.on('connection', async (ws: WebSocket) => {
                     // Query to check user credentials
                     const result8 = await pool8.request()
                         .query`
-                    SELECT *
-                    FROM Accounts
-                    WHERE Login = ${msg[1]}
-                      AND Password = ${msg[2]}
-                `;
+                        SELECT *
+                        FROM Accounts
+                        WHERE Login = ${msg[1]}
+                          AND Password = ${msg[2]}
+                    `;
 
                     // Sending success or error response to the client based on login status
                     if (result8.recordset.length > 0) {

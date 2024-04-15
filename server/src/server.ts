@@ -6,7 +6,7 @@ const config: sql.config = {
     user: 'sa',
     password: 'Pass1234567890',
     server: 'mssql',
-    database: 'mssql',
+    database: 'Questionnaires',
     port: 1433,
     options: {
         encrypt: true,

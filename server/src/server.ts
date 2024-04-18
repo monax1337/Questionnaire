@@ -59,13 +59,14 @@ server.on('connection', async (ws: WebSocket) => {
 
                 // Handling request for questionnaires available to students
                 case 'RequestForQuestionnaireStudent':
+
                     const pool1 = await sql.connect(config);
                     const result1 = await pool1.request()
                         .query(`
                             SELECT SurveyName
                             FROM Questionnaires
                             WHERE Faculty = '${msg[1].faculty}'
-                              AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
+                              AND (Groups LIKE '%${msg[1].group}%')
                         `);
                     pool1.close();
 
@@ -218,8 +219,8 @@ server.on('connection', async (ws: WebSocket) => {
                     const poolInsert = await sql.connect(config);
                     const insertQuery =
                         `
-                            INSERT INTO Questionnaires (SurveyName, Groups, ProfessorName, Faculty)
-                            VALUES ('${formName}', '${JSON.stringify(groups)}', 'Admin', '${faculty}')
+                            INSERT INTO Questionnaires (SurveyName, Faculty, Groups, ProfessorName, )
+                            VALUES ('${formName}', '${faculty}','${JSON.stringify(groups)}', 'Admin')
                         `;
                     await poolInsert.request().query(insertQuery);
                     poolInsert.close();
@@ -358,6 +359,7 @@ server.on('connection', async (ws: WebSocket) => {
                     // Extracting faculty and groups from the result
                     const faculty10 = result10.recordset[0].Faculty;
                     const groups10 = JSON.parse(result10.recordset[0].Groups);
+
                     // Sending faculty and groups to the client
                     ws.send(JSON.stringify(['AvailableGroupsForQuestionnaire', {faculty10, groups10}]));
 

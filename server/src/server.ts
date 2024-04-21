@@ -5,9 +5,9 @@ import * as WebSocket from 'ws';
 const config: sql.config = {
     user: 'sa',
     password: 'Pass1234567890',
-    server: 'localhost',
+    server: 'mssql',
     database: 'Questionnaires',
-    // port: 1433,
+    port: 1433,
     options: {
         encrypt: true,
         trustServerCertificate: true

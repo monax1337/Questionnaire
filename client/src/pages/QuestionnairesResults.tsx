@@ -50,7 +50,7 @@ const QuestionnairesResults = () => {
                 }
                 if (type === 'SendAnswerOptions') {
                     setAnswerOptions(payload.map((options: string[]) => [...options]));
-                    console.log(answerOptionsResults)
+                    console.log(answerOptions)
                 }
                 if (type === 'Answers') {
                     console.log("Received answer results:", payload);
@@ -80,7 +80,7 @@ const QuestionnairesResults = () => {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setLoad(false);
-        }, 700); // 0.3 секунды в миллисекундах
+        }, 1000); // 0.3 секунды в миллисекундах
 
         return () => {
             clearTimeout(timeoutId); // Очистить таймаут при размонтировании компонента
@@ -138,7 +138,7 @@ const QuestionnairesResults = () => {
                                         </TableCell>
                                         <TableCell>
                                             <List dense>
-                                                {answerOptions[index].map((option, idx) => (
+                                                {answerOptions.map((option, idx) => (
                                                     <ListItem
                                                         key={idx}>{answerOptionsResults[question] && answerOptionsResults[question][idx]}</ListItem>
                                                 ))}

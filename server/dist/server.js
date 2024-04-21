@@ -17,6 +17,7 @@ const config = {
     password: 'Pass1234567890',
     server: 'localhost',
     database: 'Questionnaires',
+    // port: 1433,
     options: {
         encrypt: true,
         trustServerCertificate: true
@@ -45,9 +46,9 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     // Query to fetch available groups
                     const result0 = yield pool0.request()
                         .query(`
-                        SELECT DISTINCT Faculty, Groups
-                        FROM AvailableGroups
-                    `);
+                            SELECT DISTINCT Faculty, Groups
+                            FROM AvailableGroups
+                        `);
                     pool0.close();
                     // Extracting available groups from the result and sending them to the client
                     let availableGroupsObject = {};
@@ -63,10 +64,11 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const pool1 = yield sql.connect(config);
                     const result1 = yield pool1.request()
                         .query(`
-                        SELECT SurveyName
-                        FROM Questionnaires
-                        WHERE Faculty = '${msg[1].faculty}' AND (Groups = 'Все' OR Groups LIKE '%${msg[1].group}%')
-                    `);
+                            SELECT SurveyName
+                            FROM Questionnaires
+                            WHERE Faculty = '${msg[1].faculty}'
+                              AND (Groups LIKE '%${msg[1].group}%')
+                        `);
                     pool1.close();
                     // Extracting available questionnaires for students and sending them to the client
                     const questionnaires1 = [];
@@ -80,10 +82,10 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const pool2 = yield sql.connect(config);
                     const result2 = yield pool2.request()
                         .query(`
-                        SELECT SurveyName
-                        FROM Questionnaires
-                        WHERE ProfessorName = '${msg[1]}'
-                    `);
+                            SELECT SurveyName
+                            FROM Questionnaires
+                            WHERE ProfessorName = '${msg[1]}'
+                        `);
                     pool2.close();
                     // Extracting available questionnaires for professors and sending them to the client
                     const questionnaires2 = [];
@@ -97,14 +99,12 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const pool3 = yield sql.connect(config);
                     const result3 = yield pool3.request()
                         .query(`
-                        SELECT QuestionText
-                        FROM SurveyQuestions
-                        WHERE questionnaire_id = (
-                            SELECT id
-                            FROM Questionnaires
-                            WHERE SurveyName = '${msg[1]}'
-                        )
-                    `);
+                            SELECT QuestionText
+                            FROM SurveyQuestions
+                            WHERE questionnaire_id = (SELECT id
+                                                      FROM Questionnaires
+                                                      WHERE SurveyName = '${msg[1]}')
+                        `);
                     pool3.close();
                     // Extracting questions from the result and sending them to the client
                     const questions = [];
@@ -118,17 +118,13 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const pool9 = yield sql.connect(config);
                     const result9 = yield pool9.request()
                         .query(`
-                        SELECT OptionText
-                        FROM AnswerOptions
-                        WHERE question_id IN (
-                            SELECT id
-                            FROM SurveyQuestions
-                            WHERE questionnaire_id = (
-                                SELECT id
-                                FROM Questionnaires
-                                WHERE SurveyName = '${msg[1]}'
-                            )
-                        )`);
+                            SELECT OptionText
+                            FROM AnswerOptions
+                            WHERE question_id IN (SELECT id
+                                                  FROM SurveyQuestions
+                                                  WHERE questionnaire_id = (SELECT id
+                                                                            FROM Questionnaires
+                                                                            WHERE SurveyName = '${msg[1]}'))`);
                     pool9.close();
                     // Extracting answer options from the result and sending them to the client
                     const answerOptions = [];
@@ -163,10 +159,10 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const surveyQueryResult = yield pool.request()
                         .input('surveyName', sql.NVarChar, surveyName1)
                         .query(`
-            SELECT Q.id as questionnaire_id 
-            FROM Questionnaires Q
-            WHERE Q.SurveyName = @surveyName
-        `);
+                            SELECT Q.id as questionnaire_id
+                            FROM Questionnaires Q
+                            WHERE Q.SurveyName = @surveyName
+                        `);
                     if (surveyQueryResult.recordset.length === 0) {
                         ws.send(JSON.stringify(['Error', 'No questionnaire or group found for the specified criteria']));
                         break;
@@ -177,11 +173,11 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                         .input('questionnaireId', sql.Int, questionnaireId12)
                         .input('groups', sql.VarChar, group)
                         .query(`
-            SELECT A.answers_json
-            FROM Answers A
-            WHERE A.questionnaire_id = @questionnaireId
-            AND A.groups = @groups
-        `);
+                            SELECT A.answers_json
+                            FROM Answers A
+                            WHERE A.questionnaire_id = @questionnaireId
+                              AND A.groups = @groups
+                        `);
                     // Extracting answers from the result and sending them to the client
                     if (result.recordset.length > 0) {
                         const answers = result.recordset.map(record => JSON.parse(record.answers_json));
@@ -198,47 +194,49 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     const faculty = msg[1].faculty;
                     const groups = msg[1].groups;
                     const questionnaire = msg[1].questionnaire;
-                    // Connect to the database to insert questionnaire details
+                    console.log(formName, faculty, groups, questionnaire);
+                    //Connect to the database to insert questionnaire details
                     const poolInsert = yield sql.connect(config);
                     const insertQuery = `
-                        INSERT INTO Questionnaires (SurveyName, Groups, ProfessorName, Faculty)
-                        VALUES ('${formName}', '${JSON.stringify(groups)}', 'Admin', '${faculty}')
-                    `;
+                            INSERT INTO Questionnaires (SurveyName, Faculty, Groups, ProfessorName)
+                            VALUES ('${formName}', '${faculty}','${JSON.stringify(groups)}', 'Admin')
+                        `;
                     yield poolInsert.request().query(insertQuery);
                     poolInsert.close();
                     // Fetching the questionnaire ID
                     const poolId = yield sql.connect(config);
                     const idQuery = `
-                        SELECT id
-                        FROM Questionnaires
-                        WHERE SurveyName = '${formName}'
-                    `;
+                            SELECT id
+                            FROM Questionnaires
+                            WHERE SurveyName = '${formName}'
+                        `;
                     const resultId = yield poolId.request().query(idQuery);
                     const questionnaireId = resultId.recordset[0].id;
                     poolId.close();
                     // Inserting questions and answer options into the database
                     for (const question of questionnaire) {
                         const insertQuestionQuery = `
-                            INSERT INTO SurveyQuestions (questionnaire_id, QuestionText)
-                            VALUES (${questionnaireId}, '${question.question}')
-                        `;
+                                INSERT INTO SurveyQuestions (questionnaire_id, QuestionText)
+                                VALUES (${questionnaireId}, '${question.question}')
+                            `;
                         const poolQuestion = yield sql.connect(config);
                         yield poolQuestion.request().query(insertQuestionQuery);
                         poolQuestion.close();
                         const poolQuestionId = yield sql.connect(config);
                         const questionIdQuery = `
-                            SELECT id
-                            FROM SurveyQuestions
-                            WHERE questionnaire_id = ${questionnaireId} AND QuestionText = '${question.question}'
-                        `;
+                                SELECT id
+                                FROM SurveyQuestions
+                                WHERE questionnaire_id = ${questionnaireId}
+                                  AND QuestionText = '${question.question}'
+                            `;
                         const resultQuestionId = yield poolQuestionId.request().query(questionIdQuery);
                         const questionId = resultQuestionId.recordset[0].id;
                         poolQuestionId.close();
                         for (const answer of question.answers) {
                             const insertAnswerQuery = `
-                                INSERT INTO AnswerOptions (question_id, OptionText)
-                                VALUES (${questionId}, '${answer}')
-                            `;
+                                    INSERT INTO AnswerOptions (question_id, OptionText)
+                                    VALUES (${questionId}, '${answer}')
+                                `;
                             const poolAnswer = yield sql.connect(config);
                             yield poolAnswer.request().query(insertAnswerQuery);
                             poolAnswer.close();
@@ -251,10 +249,10 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     // Check if the user already exists
                     const result6 = yield pool6.request()
                         .query `
-                    SELECT Login
-                    FROM Accounts
-                    WHERE Login = ${msg[1]}
-                `;
+                        SELECT Login
+                        FROM Accounts
+                        WHERE Login = ${msg[1]}
+                    `;
                     // Sending error message if user already exists, otherwise registering the user
                     if (result6.recordset.length > 0) {
                         ws.send(JSON.stringify(['Error', 'Пользователь уже существует']));
@@ -267,10 +265,10 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                         };
                         const result7 = yield pool6.request()
                             .query `
-                        INSERT INTO Accounts
-                            (Login, Password)
-                        VALUES (@Login, @Password)
-                    `;
+                            INSERT INTO Accounts
+                                (Login, Password)
+                            VALUES (@Login, @Password)
+                        `;
                         // Sending success or error response to the client
                         if (result7.rowsAffected[0] === 1) {
                             ws.send(JSON.stringify(['Success']));
@@ -287,11 +285,11 @@ server.on('connection', (ws) => __awaiter(void 0, void 0, void 0, function* () {
                     // Query to check user credentials
                     const result8 = yield pool8.request()
                         .query `
-                    SELECT *
-                    FROM Accounts
-                    WHERE Login = ${msg[1]}
-                      AND Password = ${msg[2]}
-                `;
+                        SELECT *
+                        FROM Accounts
+                        WHERE Login = ${msg[1]}
+                          AND Password = ${msg[2]}
+                    `;
                     // Sending success or error response to the client based on login status
                     if (result8.recordset.length > 0) {
                         ws.send(JSON.stringify(['Success']));

@@ -5,9 +5,9 @@ import * as WebSocket from 'ws';
 const config: sql.config = {
     user: 'sa',
     password: 'Pass1234567890',
-    server: 'mssql',
+    server: 'localhost',
     database: 'Questionnaires',
-    port: 1433,
+    // port: 1433,
     options: {
         encrypt: true,
         trustServerCertificate: true
@@ -214,12 +214,13 @@ server.on('connection', async (ws: WebSocket) => {
                     const faculty = msg[1].faculty;
                     const groups = msg[1].groups;
                     const questionnaire = msg[1].questionnaire;
+                    console.log(formName, faculty, groups, questionnaire)
 
-                    // Connect to the database to insert questionnaire details
+                    //Connect to the database to insert questionnaire details
                     const poolInsert = await sql.connect(config);
                     const insertQuery =
                         `
-                            INSERT INTO Questionnaires (SurveyName, Faculty, Groups, ProfessorName, )
+                            INSERT INTO Questionnaires (SurveyName, Faculty, Groups, ProfessorName)
                             VALUES ('${formName}', '${faculty}','${JSON.stringify(groups)}', 'Admin')
                         `;
                     await poolInsert.request().query(insertQuery);

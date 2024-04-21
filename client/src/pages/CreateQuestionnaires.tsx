@@ -27,6 +27,11 @@ const CreateQuestionnaires = () => {
     const [nothing,setNothing]=useState<null>(null);
     const {socket} = useWebSocket();
 
+    const handleDataFromChild = (data:any) => {
+        setFaculty(data.faculty);
+        setGroups(data.groups);
+        console.log(data, data[1]);
+    };
 
     // Функция для открытия/закрытия модального окна
     const toggleModal = () => {
@@ -98,8 +103,11 @@ const CreateQuestionnaires = () => {
 
 
     const sendQuestionnaireData = (data: any) => {
-        if (socket)
+        if (socket){
+            console.log(data);
             socket.send(JSON.stringify(["ReceiveProfessorQuestionnaire", data]));
+        }
+
     };
 
     // Функция для добавления анкеты
@@ -121,9 +129,6 @@ const CreateQuestionnaires = () => {
             newQuestionnaire.splice(questionIndex, 1);
             return newQuestionnaire;
         });
-    };
-    const handleDataFromChild = () => {
-
     };
 
     return (

@@ -17,7 +17,7 @@ const config = {
     password: 'Pass1234567890',
     server: 'localhost',
     database: 'Questionnaires',
-    // port: 1433,
+    //port: 1433,
     options: {
         encrypt: true,
         trustServerCertificate: true

@@ -17,7 +17,7 @@ const Questionnaires: QuestionnairesData = () => {
     const {socket} = useWebSocket();
     const location = useLocation(); // Get location object from React Router
     const {selectedGroup} = location.state || {};
-    console.log(selectedGroup)
+    //console.log(selectedGroup)
     let enteredQuestionnaireGroup = selectedGroup.groups;
     let enteredQuestionnaireFaculty = selectedGroup.faculty;
 
@@ -30,15 +30,15 @@ const Questionnaires: QuestionnairesData = () => {
     useEffect(() => {
         if (socket) {
             socket.onopen = () => {
-                console.log('WebSocket connection opened.');
+                //console.log('WebSocket connection opened.');
                 socket.send(JSON.stringify(["RequestForQuestionnaireStudent", {faculty:enteredQuestionnaireFaculty,group:enteredQuestionnaireGroup}]))
             };
             socket.onmessage = (event) => {
-                console.log('Received message:', event.data);
+                //console.log('Received message:', event.data);
                 setAvailableQuestionnaires(JSON.parse(event.data)[1]);
             };
             socket.onclose = () => {
-                console.log('WebSocket connection closed.');
+                //console.log('WebSocket connection closed.');
             };
         }
     }, [socket]);

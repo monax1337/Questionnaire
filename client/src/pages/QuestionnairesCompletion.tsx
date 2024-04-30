@@ -81,7 +81,7 @@ const QuestionnairesCompletion: React.FC = () => {
                 ...prevSavedAnswers,
                 ...selectedAnswers,
             ]);
-            console.log(selectedAnswers);
+            //console.log(selectedAnswers);
             if (socket) {
                 socket.send(JSON.stringify(["SendStudentAnswers", [name,
                     groups,

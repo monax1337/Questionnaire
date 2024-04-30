@@ -17,7 +17,7 @@ CREATE TABLE Questionnaires (
 )
 
     INSERT INTO Questionnaires(SurveyName,Faculty, Groups, ProfessorName)
-    VALUES ('Уровень удовлетворенности студентов','ФИТР' ,'["10701121","10701221","10701321","10701421"]', 'Admin')
+    VALUES ('Уровень удовлетворенности студентов','ФИТР' ,'["10701123","10701223","10701323","10701122","10701222","10701322","10701121","10701221","10701321","10701421"]', 'Admin')
 
 
 CREATE TABLE SurveyQuestions (
@@ -73,7 +73,7 @@ CREATE TABLE AvailableGroups (
     )
 
     INSERT INTO AvailableGroups(Faculty, Groups)
-VALUES ('ФИТР', '["10701121","10701221","10701321","10701421"]')
+VALUES ('ФИТР', '["10701123","10701223","10701323","10701122","10701222","10701322","10701121","10701221","10701321","10701421"]')
 
 
 CREATE TABLE Answers (

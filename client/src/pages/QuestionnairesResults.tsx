@@ -4,7 +4,7 @@ import {useWebSocket} from "../Contexts/WebSocketContext";
 import {useParams} from "react-router-dom";
 import MyFormControl from "../Components/UI/FormControl/MyFormControl";
 import Typography from "@mui/material/Typography";
-import {List, ListItemIcon, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {List, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import ListItem from "@mui/material/ListItem";
 
 const QuestionnairesResults = () => {
@@ -42,7 +42,7 @@ const QuestionnairesResults = () => {
                 const [type, payload] = data;
                 if (type === 'AvailableGroupsForQuestionnaire') {
                     const {faculty10: faculty, groups10: groups} = payload;
-                    console.log(faculty + " " + groups);
+                    //console.log(faculty + " " + groups);
                     setAvailableGroupsForQuestionnaire({faculty, groups});
                 }
                 if (type === 'SendQuestion') {
@@ -50,26 +50,32 @@ const QuestionnairesResults = () => {
                 }
                 if (type === 'SendAnswerOptions') {
                     setAnswerOptions(payload.map((options: string[]) => [...options]));
-                    console.log(answerOptions)
+                    //console.log(answerOptions)
                 }
                 if (type === 'Answers') {
                     console.log("Received answer results:", payload);
+                    const maxOptionsCount = Math.max(...answerOptions.map(options => options.length));
                     const results: { [question: string]: number[] } = {};
 
-                    payload.forEach((studentAnswers: number[][], studentIndex: number) => {
-                        studentAnswers.forEach((answers: number[], questionIndex: number) => {
-                            answers.forEach((answer, optionIndex) => {
-                                const question = questions[questionIndex];
-                                const options = answerOptions[questionIndex];
-                                if (!results[question]) {
-                                    results[question] = new Array(options.length).fill(0);
-                                }
-                                results[question][optionIndex] += answer;
-                            });
+                    if (payload && Array.isArray(payload)) {
+                        payload.forEach((studentAnswers: number[][], studentIndex: number) => {
+                            if (Array.isArray(studentAnswers)) {
+                                studentAnswers.forEach((answers: number[], questionIndex: number) => {
+                                    if (Array.isArray(answers)) {
+                                        const question = questions[questionIndex];
+                                        if (!results[question]) {
+                                            results[question] = new Array(maxOptionsCount).fill(0);
+                                        }
+                                        answers.forEach((answer, optionIndex) => {
+                                            results[question][optionIndex] += answer;
+                                        });
+                                    }
+                                });
+                            }
                         });
-                    });
+                    }
 
-                    console.log("Computed answer results:", results);
+                    //console.log("Computed answer results:", results);
                     setAnswerOptionsResults(results);
                 }
                 //setLoad(false);
@@ -80,10 +86,10 @@ const QuestionnairesResults = () => {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setLoad(false);
-        }, 1000); // 0.3 секунды в миллисекундах
+        }, 1000);
 
         return () => {
-            clearTimeout(timeoutId); // Очистить таймаут при размонтировании компонента
+            clearTimeout(timeoutId);
         };
     }, []);
 

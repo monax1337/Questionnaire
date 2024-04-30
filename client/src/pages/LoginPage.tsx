@@ -39,7 +39,7 @@ const LoginPage = () => {
     };
 
     const sendGroup=()=>{
-        console.log(selectedGroup)
+        //console.log(selectedGroup)
         navigate('/questionnaires', { state: { selectedGroup } });
     }
 

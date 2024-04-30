@@ -30,7 +30,7 @@ const CreateQuestionnaires = () => {
     const handleDataFromChild = (data:any) => {
         setFaculty(data.faculty);
         setGroups(data.groups);
-        console.log(data, data[1]);
+        //console.log(data, data[1]);
     };
 
     // Функция для открытия/закрытия модального окна
@@ -104,7 +104,7 @@ const CreateQuestionnaires = () => {
 
     const sendQuestionnaireData = (data: any) => {
         if (socket){
-            console.log(data);
+            //console.log(data);
             socket.send(JSON.stringify(["ReceiveProfessorQuestionnaire", data]));
         }
 

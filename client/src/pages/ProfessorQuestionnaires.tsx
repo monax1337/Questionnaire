@@ -22,15 +22,15 @@ const ProfessorQuestionnaires = () => {
     useEffect(() => {
         if (socket) {
             socket.onopen = () => {
-                console.log('WebSocket connection opened.');
+                //console.log('WebSocket connection opened.');
                 socket.send(JSON.stringify(["RequestForQuestionnairesProfessor", ProfessorName]))
             };
             socket.onmessage = (event) => {
-                console.log('Received message:', event.data);
+                //console.log('Received message:', event.data);
                 setAvailableQuestionnaires(JSON.parse(event.data)[1]);
             };
             socket.onclose = () => {
-                console.log('WebSocket connection closed.');
+                //console.log('WebSocket connection closed.');
             };
         }
     }, [socket]);
